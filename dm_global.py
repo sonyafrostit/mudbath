@@ -6,6 +6,8 @@ db_conn = dm_db.DatabaseConnection(username='mudbath', password='St1ll@l1v3!', d
 # List of online users
 USER_LIST = []
 
+# Salt for the password table to protect against rainbow table attacks
+SALT = db_conn.execute_query("SELECT salt FROM serverdata;")[0][0];
 
 # Permission Groups
 #

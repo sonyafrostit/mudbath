@@ -43,15 +43,14 @@ class DatabaseConnection:
 		"""
 		Takes a dm_core User object as input and writes it to the database, returning the values for autogens in a tuple.
 		"""
-		print "INSERT INTO accounts(account_name, password, permissions) VALUES('%s', '%s', '%s');"%(user.a_account_name, user.a_password, user.a_permissions)
-		self.execute_query("INSERT INTO accounts(account_name, password) VALUES('%s', '%s');"%(user.a_account_name, user.a_password))
+		self.execute_query("INSERT INTO accounts(account_name, password) VALUES(%s, %s);", [user.a_account_name, user.a_password])
 		self.conn.commit()
-		return self.execute_query("SELECT account_id, creation_date FROM accounts WHERE account_name = '%s';"%(user.a_account_name)) # Get autogens and return them
+		return self.execute_query("SELECT account_id, creation_date FROM accounts WHERE account_name = %s;", [user.a_account_name]) # Get autogens and return them
 	def update_login_date(self, a_account_id):
 		"""
 		Updates the column that shows the last date logged in with account.
 		"""
-		self.execute_query("UPDATE accounts SET last_visit_date='%s' WHERE account_id=%s;"%(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), a_account_id))
+		self.execute_query("UPDATE accounts SET last_visit_date=%s WHERE account_id=%s;", [datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), a_account_id])
 		self.conn.commit()
 
 	
@@ -59,18 +58,18 @@ class DatabaseConnection:
 		"""
 		Checks for duplicates of a username. Returns true if the username doesn't exist in the database, false if it does.
 		"""
-		return len(self.execute_query("SELECT * FROM accounts WHERE account_name = '%s';"%(username))) == 0
+		return len(self.execute_query("SELECT * FROM accounts WHERE account_name = %s;", [username])) == 0
 	def change_account_id_attribute(self, attribute, value, a_account_id):
 		"""
 		Changes attribute for given account id to value in database
 		"""
-		self.execute_query("UPDATE accounts SET %s='%s' WHERE account_id='%s';"%(attribute, value, a_account_id))
+		self.execute_query("UPDATE accounts SET %s=%s WHERE account_id=%s;", [attribute, value, a_account_id])
 		self.conn.commit()
 	def change_account_attribute(self, attribute, value, a_account_name):
 		"""
 		Changes attribute for given account name to value in database
 		"""
-		self.execute_query("UPDATE accounts SET %s='%s' WHERE account_name='%s';"%(attribute, value, a_account_name))
+		self.execute_query("UPDATE accounts SET %s=%s WHERE account_name=%s;", [attribute, value, a_account_name])
 		self.conn.commit()
 	def change_permissions_cmd(self, account_name, perm_change):
 		"""
@@ -78,7 +77,7 @@ class DatabaseConnection:
 		"""
 		if account_name == "root":
 			return "Cannot add or remove permissions to root user!"
-		q_res = self.execute_query("SELECT permissions FROM accounts WHERE account_name='%s';"%(account_name))
+		q_res = self.execute_query("SELECT permissions FROM accounts WHERE account_name=%s;", [account_name])
 		if len(q_res) > 0:
 			if q_res[0][0] % (abs(perm_change) * 2) >= abs(perm_change):
 				if perm_change > 0:
@@ -98,7 +97,7 @@ class DatabaseConnection:
 	# Channels data
 
 	def create_channel(self, c_name, owner_co_account_id):
-		self.execute_query("INSERT INTO channels (name, active) VALUES (%s, true);"%(c_name))
+		self.execute_query("INSERT INTO channels (name, active) VALUES (%s, true);", [c_name])
 		self.conn.commit()
-		self.execute_query("INSERT INTO channel_connections (account_id, conn_role, active, channel_id) VALUES ( %s, 0, true, %s);"%(owner_co_account_id, self.conn.insert_id()))
+		self.execute_query("INSERT INTO channel_connections (account_id, conn_role, active, channel_id) VALUES ( %s, 0, true, %s);", [owner_co_account_id, self.conn.insert_id()])
 		self.conn.commit()

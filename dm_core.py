@@ -99,7 +99,7 @@ class User:
 		"""
 		Used to get and validate user input for the password. Part 2 of Login Sequence
 		"""
-		if hashlib.sha256(message).hexdigest() == self.a_password:
+		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
 			# TODO Implement Standard Sequence
 			self.client.send("Welcome!\n\n")
 			self.logged_in = True
@@ -161,14 +161,14 @@ class User:
 		"""
 		Get a password. Step 4 of New Account Sequence
 		"""
-		self.a_password = hashlib.sha256(message).hexdigest()
+		self.a_password = hashlib.sha256(message + dm_global.SALT).hexdigest()
 		self.message_function = self.newaccount_passwordconfirm;
 		self.client.send("Confirm Password: ")
 	def newaccount_passwordconfirm(self, message):
 		"""
 		Confirm password and finish. Step 5 of New Account Sequence
 		"""
-		if hashlib.sha256(message).hexdigest() == self.a_password:
+		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
 
 			self.a_permissions = dm_global.DEFAULT_PERMISSIONS
 			autogens = dm_global.db_conn.write_new_user(self) # Write to database and get the creation date and id
