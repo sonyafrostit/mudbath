@@ -64,8 +64,8 @@ class User:
 	# functions to handle user input
 		# User Commands. Moderator commands, account commands, and one-to-one messaging commands.
 		self.USER_COMMANDS = {
-		'bye' : (self.bye, "/bye - Logs out and exits the server", USER),
-		'help' : (self.help, "/help - Shows helpful information!", USER)
+		'bye' : (self.bye, "/bye - Logs out and exits the server", dm_global.USER),
+		'help' : (self.help, "/help - Shows helpful information!", dm_global.USER)
 
 		}
 
