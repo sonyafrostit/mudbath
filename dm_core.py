@@ -59,9 +59,15 @@ class User:
 		# Begin Login Sequence:
 		client.send("Username (if this is your first visit, enter in a username to sign up): ")
 		self.message_function = self.login_uname
-
+		self.silenced = False
 		self.logged_in = False # To prevent function calls when data has not yet been populated as necessary for preconditions
 	# functions to handle user input
+		# User Commands. Moderator commands, account commands, and one-to-one messaging commands.
+		self.USER_COMMANDS = {
+		'bye' : (self.bye, "/bye - Logs out and exits the server", USER),
+		'help' : (self.help, "/help - Shows helpful information!", USER)
+
+		}
 
 	# LOGIN SEQUENCE
 	#
@@ -193,17 +199,32 @@ class User:
 			else:
 				command = message[1:]
 				args = ""
-			if command in GLOBAL_COMMANDS:
-				if self.has_permission(GLOBAL_COMMANDS[command][2]):
-					self.client.send(GLOBAL_COMMANDS[command][0](args))
-				else:
-					self.client.send("I'm sorry, Dave. I'm afraid I can't do that. (Permissions Error)\n")
+			if command in GLOBAL_COMMANDS and self.has_permission(GLOBAL_COMMANDS[command][2]):
+				self.client.send(GLOBAL_COMMANDS[command][0](args))
+			elif command in self.USER_COMMANDS and self.has_permission(GLOBAL_COMMANDS[command][2]):
+				self.client.send(GLOBAL_COMMANDS[command][0](args))
 			else:	
-				self.client.send("Command Not Found\n")
+				self.client.send("Command either does not exist or you do not have permission to do that. Try '/help' if you're lost!\n")
+				# We don't show if you don't have permissions or if its a typo. We just remove all access.
 		else:
 			self.client.send(message)
 		self.client.send("\n>")
-
+	# USER COMMANDS
+	#
+	# These are for use by everyone, they're even left on for people who are banned, although the 'silenced' flag may disable some of them.
+	#
+	def help(self, args):
+		"""
+		Displays the help string for each command
+		"""
+		helpstring = ""
+		for command in GLOBAL_COMMANDS:
+			if self.has_permission(GLOBAL_COMMANDS[command]):
+				helpstring += GLOBAL_COMMANDS[command][1] + '\n'
+		for command in self.USER_COMMANDS:
+			if self.has_permission(self.USER_COMMANDS[command]):
+				helpstring += self.USER_COMMANDS[command][1] + '\n'
+		return helpstring
 	def logout(self):
 		"""
 		Used to logout the user or to reset data in New Account and Login Sequences

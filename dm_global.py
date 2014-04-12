@@ -22,15 +22,15 @@ ROOT = 1
 ADMIN = 2 
 # MODERATOR: Commands that have to do with ability to moderate the game and issue bans/lower-level permissions. Chat channels
 MODERATOR = 4
-PLAYER = 8
-PARTICIPANT = 16
+USER = 8
+CHANNEL = 16
 
 # For use when parsing commands only. Use the previous groups to programattically add permissons
 PERMS_DICT = {
 "Admin" : ADMIN,
 "Mod" : MODERATOR,
-"Player" : PLAYER,
-"Part" : PARTICIPANT,
+"User" : USER, # Avoid removing this permission! It prevents you from even logging out!
+"Chan" : CHANNEL,
 }
 
-DEFAULT_PERMISSIONS = PLAYER + PARTICIPANT
+DEFAULT_PERMISSIONS = USER + CHANNEL
