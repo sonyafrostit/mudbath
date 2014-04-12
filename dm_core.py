@@ -225,6 +225,11 @@ class User:
 			if self.has_permission(self.USER_COMMANDS[command]):
 				helpstring += self.USER_COMMANDS[command][1] + '\n'
 		return helpstring
+	def bye(self, args):
+		return "TODO IMPLEMENT"
+	#
+	# Other misc methods
+	#
 	def logout(self):
 		"""
 		Used to logout the user or to reset data in New Account and Login Sequences
