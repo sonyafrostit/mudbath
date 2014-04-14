@@ -14,8 +14,11 @@ def broadcast(args):
 			user.client.send(args)
 	return ""
 
-# NOTE: These commands are for administrators. Moderators can only silence/unsilence (which affects PARTICIPANT). They can also shadowban.
-# Even administrators should use these commands instead when dealing with rogue users, because they send alerts to user inboxes. (Or they will when implemented) These should be used to make users mods or admins
+# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
+# They can also shadowban.
+# Even administrators should use these commands instead when dealing with rogue users,
+# because they send alerts to user inboxes. (Or they will when implemented)
+# These should be used to make users mods or admins
 def change_permissions(args):
 	"""
 	Change the permissions of a particular user. Args in the format of <user> <+/-> <permission>
@@ -43,9 +46,15 @@ def get_permissions(args):
 		s += "%s\n"%(key)
 	return s
 GLOBAL_COMMANDS = {
-'broadcast': (broadcast, "/broadcast - Broadcasts a message", dm_global.ADMIN),
-'ch_perm': (change_permissions, "/ch_perm - Changes the permissions for a particular user. Format: '/ch_perm <user> <+/-> <permission>'", dm_global.ADMIN),
-'get_perm': (get_permissions, "/get_perm - Displays a list of possible permissions", dm_global.ADMIN)
+'broadcast': (broadcast,
+	"/broadcast - Broadcasts a message",
+	dm_global.ADMIN),
+'ch_perm': (change_permissions,
+	"/ch_perm - Changes the permissions for a particular user. Format: '/ch_perm <user> <+/-> <permission>'",
+	dm_global.ADMIN),
+'get_perm': (get_permissions,
+	"/get_perm - Displays a list of possible permissions",
+	dm_global.ADMIN)
 }
 
 #
@@ -61,20 +70,33 @@ class User:
 		self.message_function = self.login_uname
 		self.silenced = False
 		self.password_attempts = 0
-		self.logged_in = False # To prevent function calls when data has not yet been populated as necessary for preconditions
-	# functions to handle user input
+
+		# To prevent function calls when data has not yet been populated as necessary for preconditions
+		self.logged_in = False 
+		# functions to handle user input
 		# User Commands. Moderator commands, account commands, and one-to-one messaging commands.
 		self.USER_COMMANDS = {
-		'bye': (self.bye, "/bye - Logs out and exits the server", dm_global.USER),
-		'help': (self.help, "/help - Shows helpful information!", dm_global.USER),
-		'passwd': (self.passwd, "/passwd - Changes password", dm_global.USER)
+		'bye': (self.bye,
+			"/bye - Logs out and exits the server",
+			dm_global.USER),
+		'help': (self.help,
+			"/help - Shows helpful information!",
+			dm_global.USER),
+		'passwd': (self.passwd,
+			"/passwd - Changes password",
+			dm_global.USER),
+		'perms': (self.perms,
+			"/perms - Shows you what your permissions are",
+			dm_global.USER)
 
 		}
 
 	# LOGIN SEQUENCE
 	#
-	# 1. Get Username input from user and look up in database. If there is no user with that username, go to New Account Sequence (login_uname)
-	# 2. Get Password input from user, hash it against database entry. Go to Standard Sequence if correct. Revert to Step 1 if incorrect.
+	# 1. Get Username input from user and look up in database.
+	#    If there is no user with that username, go to New Account Sequence (login_uname)
+	# 2. Get Password input from user, hash it against database entry.
+	#    Go to Standard Sequence if correct. Revert to Step 1 if incorrect.
 	#
 
 	def login_uname(self, message):
@@ -83,7 +105,8 @@ class User:
 		"""
 		if len(message) == 0:
 			return
-		# Corresponds to database entry, but this one is special because we need it to get the rest of the data. Also, the New Account Sequence needs a value for the username
+		# Corresponds to database entry, but this one is special because we need it to get the rest of the data.
+		# Also, the New Account Sequence needs a value for the username
 		self.a_account_name = message
 		user_data = dm_global.db_conn.get_user_info(message) # Query database for user info
 		if user_data is None:
@@ -133,10 +156,12 @@ class User:
 	# NEW ACCOUNT SEQUENCE
 	#
 	# 1. Confirm that they actually want to create a new account, or if they just misspelled their account name (newaccount_confirm)
-	# 2. Confirm their username, go to step 3 if they don't like the current one. If they like it, go to step 4 (newaccount_usernameconfirm)
+	# 2. Confirm their username, go to step 3 if they don't like the current one.
+	#    If they like it, go to step 4 (newaccount_usernameconfirm)
 	# 3. Get a new username and check to see if it's unique. If so, go to step 2. If not, repeat.
 	# 4. Get a password
-	# 5. Confirm that password. If it didn't work, go back to step 4. If it did, write their info into the database, log them in, and go to Standard Sequence
+	# 5. Confirm that password. If it didn't work, go back to step 4.
+	#    If it did, write their info into the database, log them in, and go to Standard Sequence
 	#
 
 	def newaccount_confirm(self, message):
@@ -200,7 +225,9 @@ class User:
 		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
 
 			self.a_permissions = dm_global.DEFAULT_PERMISSIONS
-			autogens = dm_global.db_conn.write_new_user(self) # Write to database and get the creation date and id
+
+			# Write to database and get the creation date and id
+			autogens = dm_global.db_conn.write_new_user(self) 
 			self.a_account_id = autogens[0]
 			self.a_creation_date = autogens[1]
 			self.logged_in = True
@@ -231,16 +258,18 @@ class User:
 			elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
 				self.client.send(self.USER_COMMANDS[command][0](args))
 			else:	
-				self.client.send("Command either does not exist or you do not have permission to do that. Try '/help' if you're lost!\n")
+				self.client.send("Command either does not exist or you do not have permission to do that.Try '/help' if you're lost!\n")
 				# We don't show if you don't have permissions or if its a typo. We just remove all access.
 		else:
 			self.client.send(message)
 		self.client.send("\n>")
 	# CHANGE PASSWORD SEQUENCE
 	#
-	# 1. Prompt user for the old password. If the user inputs the correct password, then proceed to step 2. If the user doesn't, prompt them 4 more times and exit to standard sequence.
+	# 1. Prompt user for the old password. If the user inputs the correct password, then proceed to step 2. 
+	#    If the user doesn't, prompt them 4 more times and exit to standard sequence.
 	# 2. Prompt the user for a new password. Accept all non-blank input. Continue to step 3
-	# 3. Prompt the user to confirm their password. If they don't match, go back to step 2. If they do match, change the password and then go back to standard sequence.
+	# 3. Prompt the user to confirm their password. If they don't match, go back to step 2. 
+	#    If they do match, change the password and then go back to standard sequence.
 	def chpass_old_prompt(self, message):
 		"""
 		Entry point for Change password sequence. Prompts user for their password.
@@ -280,10 +309,11 @@ class User:
 			self.message_function = self.standardseq_command
 		else:
 			self.client.send("Passwords do not match!\nNew Password:")
-			self.message_function = self.standardseq_command
+			self.message_function = self.chpass_new_prompt
 	# USER COMMANDS
 	#
-	# These are for use by everyone, they're even left on for people who are banned, although the 'silenced' flag may disable some of them.
+	# These are for use by everyone. They're even left on for people who are banned,
+	# although the 'silenced' flag may disable some of them.
 	#
 	def help(self, args):
 		"""
@@ -308,6 +338,15 @@ class User:
 		"""
 		self.client.send("Old password:")
 		self.message_function = self.chpass_old_prompt
+	def perms(self, args):
+		"""
+		Displays a list of permissions that the user has
+		"""
+		if self.permissions = dm_global.ROOT:
+			self.client.send("Root")
+		for key in dm_global.PERMS_DICT:
+			if self.has_permission(dm_global.PERMS_DICT[key]):
+				self.client.send(key)
 	#
 	# Other misc methods
 	#
@@ -334,8 +373,9 @@ class User:
 
 	def __eq__(self, other):
         	return (isinstance(other, self.__class__)
-            	and self.client == other.client) # Users are the same if their clients are the same. Keep in mind a user is NOT the same as an account.
+            	and self.client == other.client) # Users are the same if their clients are the same.
+        										 # Keep in mind a user is NOT the same as an account.
 
-    	def __ne__(self, other):
-        	return not self.__eq__(other)
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
