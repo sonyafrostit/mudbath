@@ -61,15 +61,15 @@ class DatabaseConnection:
 		return len(self.execute_query("SELECT * FROM accounts WHERE account_name = %s;", [username])) == 0
 	def change_account_id_attribute(self, attribute, value, a_account_id):
 		"""
-		Changes attribute for given account id to value in database
+		Changes attribute for given account id to value in database. exitDO NOT take "attribute" as raw user input.
 		"""
-		self.execute_query("UPDATE accounts SET %s=%s WHERE account_id=%s;", [attribute, value, a_account_id])
+		self.execute_query("UPDATE accounts SET {a}=%s WHERE account_id=%s;".format(a=attribute), [value, a_account_id])
 		self.conn.commit()
 	def change_account_attribute(self, attribute, value, a_account_name):
 		"""
-		Changes attribute for given account name to value in database
+		Changes attribute for given account name to value in database. DO NOT take "attribute" as raw user input.
 		"""
-		self.execute_query("UPDATE accounts SET %s=%s WHERE account_name=%s;", [attribute, value, a_account_name])
+		self.execute_query("UPDATE accounts SET {a}=%s WHERE account_name=%s;".format(a=attribute), [value, a_account_name])
 		self.conn.commit()
 	def change_permissions_cmd(self, account_name, perm_change):
 		"""
