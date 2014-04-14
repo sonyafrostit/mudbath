@@ -25,7 +25,7 @@ def on_disconnect(client):
     for user in dm_global.USER_LIST:
         if user.client.addrport() == client.addrport():
             dm_global.USER_LIST.remove(user)
-            user.client = NULL
+            user.client = None
             print "Removed user %s" % user.a_account_name
     for user in dm_global.USER_LIST:
         print user.a_account_name
