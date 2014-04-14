@@ -43,7 +43,7 @@ class DatabaseConnection:
 		"""
 		Takes a dm_core User object as input and writes it to the database, returning the values for autogens in a tuple.
 		"""
-		self.execute_query("INSERT INTO accounts(account_name, password) VALUES(%s, %s);", [user.a_account_name, user.a_password])
+		self.execute_query("INSERT INTO accounts(account_name, password, permissions) VALUES(%s, %s, %s);", [user.a_account_name, user.a_password, user.a_permissions])
 		self.conn.commit()
 		return self.execute_query("SELECT account_id, creation_date FROM accounts WHERE account_name = %s;", [user.a_account_name]) # Get autogens and return them
 	def update_login_date(self, a_account_id):
