@@ -23,7 +23,7 @@ def on_disconnect(client):
     """
     print "-- Lost connection to %s" % client.addrport()
     for user in dm_global.USER_LIST:
-        if user.client == client:
+        if user.client.addrport() == client.addrport():
             dm_global.USER_LIST.remove(user)
 
 
