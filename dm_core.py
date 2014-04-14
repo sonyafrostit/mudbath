@@ -376,6 +376,6 @@ class User:
             	and self.client == other.client) # Users are the same if their clients are the same.
         										 # Keep in mind a user is NOT the same as an account.
 
-    def __ne__(self, other):
-        return not self.__eq__(other)
+    	def __ne__(self, other):
+        	return not self.__eq__(other)
 
