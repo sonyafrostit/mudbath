@@ -244,7 +244,11 @@ class User:
 				helpstring += self.USER_COMMANDS[command][1] + '\n'
 		return helpstring
 	def bye(self, args):
-		return "TODO IMPLEMENT"
+		"""
+		Deactivates the client for pickup by the main server loop
+		"""
+		self.client.active = False;
+
 	#
 	# Other misc methods
 	#

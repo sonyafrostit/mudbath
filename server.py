@@ -24,7 +24,7 @@ def on_disconnect(client):
     Handles lost connections.
     """
     print "-- Lost connection to %s" % client.addrport()
-    dm_global.USER_LIST.remove(dm_global.User(client))
+    dm_global.USER_LIST.remove(dm_core.User(client))
     dm_global.broadcast('%s leaves the conversation.\n' % client.addrport() )
 
 
