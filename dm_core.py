@@ -274,7 +274,7 @@ class User:
 		if len(message) == 0:
 			return
 		if self.new_pass == hashlib.sha256(message + dm_global.SALT).hexdigest():
-			dm_global.db_conn.change_account_id_attribute(self.new_pass, "password", self.a_account_id)
+			dm_global.db_conn.change_account_id_attribute("password", self.new_pass, self.a_account_id)
 			self.a_password = self.new_pass
 			self.new_pass = None
 			self.message_function = self.standardseq_command
