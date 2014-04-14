@@ -70,7 +70,7 @@ class User:
 		self.message_function = self.login_uname
 		self.silenced = False
 		self.password_attempts = 0
-
+		self.prompt = ">>"
 		# To prevent function calls when data has not yet been populated as necessary for preconditions
 		self.logged_in = False 
 		# functions to handle user input
@@ -110,10 +110,8 @@ class User:
 		self.a_account_name = message
 		user_data = dm_global.db_conn.get_user_info(message) # Query database for user info
 		if user_data is None:
-			self.client.send("User '%s' doesn't exist, would you like to create a new account? (Yes/No)" % message)
 			# Go to New Account Sequence
-			self.message_function = self.newaccount_confirm
-			return
+			self.activate_newaccount()
 		
 		# Populate Account Data
 		# ALL variables beginning with "a_" correspond to a database column in the "accounts" table
@@ -142,7 +140,7 @@ class User:
 			self.logged_in = True
 			self.client.send("Last Visit was on %s\n"%(self.a_last_visit_date))
 			dm_global.db_conn.update_login_date(self.a_account_id)
-			self.message_function = self.standardseq_command
+			self.activate_standardseq()
 			self.password_attempts = 0
 		else:
 			if self.password_attempts == 5:
@@ -163,7 +161,13 @@ class User:
 	# 5. Confirm that password. If it didn't work, go back to step 4.
 	#    If it did, write their info into the database, log them in, and go to Standard Sequence
 	#
-
+	def activate_newaccount(self):
+		"""
+		Activate method for new account sequence.
+		"""
+		self.client.send("User '%s' doesn't exist, would you like to create a new account? (Yes/No)" % self.a_account_name)
+		self.message_function = self.newaccount_confirm
+		return
 	def newaccount_confirm(self, message):
 		"""
 		Confirm user wants to make a new account. Beginning point of New Account Sequence
@@ -231,7 +235,7 @@ class User:
 			self.a_account_id = autogens[0]
 			self.a_creation_date = autogens[1]
 			self.logged_in = True
-			self.client.send("Welcome!")
+			self.client.send("Welcome!\n\n")
 			self.message_function = self.standardseq_command
 			
 		else:
@@ -239,7 +243,13 @@ class User:
 			
 			self.message_function = newaccount_password
 			self.client.send("Enter a Password (Warning: This will be sent over insecure connection): ")
-	# TODO Implement
+	# STANDARD SEQUENCE
+	#
+	# Take user input and match it with all commands
+	# Be sure to check command permissions.
+	def activate_standardseq(self):
+		self.client.send(self.prompt)
+		self.message_function = self.standardseq_command
 	def standardseq_command(self, message):
 		if len(message) == 0:
 			return
@@ -262,7 +272,6 @@ class User:
 				# We don't show if you don't have permissions or if its a typo. We just remove all access.
 		else:
 			self.client.send(message)
-		self.client.send("\n>")
 	# CHANGE PASSWORD SEQUENCE
 	#
 	# 1. Prompt user for the old password. If the user inputs the correct password, then proceed to step 2. 
@@ -270,6 +279,9 @@ class User:
 	# 2. Prompt the user for a new password. Accept all non-blank input. Continue to step 3
 	# 3. Prompt the user to confirm their password. If they don't match, go back to step 2. 
 	#    If they do match, change the password and then go back to standard sequence.
+	def activate_chpass(self):
+		self.client.send("Old password:")
+		self.message_function = self.chpass_old_prompt
 	def chpass_old_prompt(self, message):
 		"""
 		Entry point for Change password sequence. Prompts user for their password.
@@ -306,7 +318,7 @@ class User:
 			dm_global.db_conn.change_account_id_attribute("password", self.new_pass, self.a_account_id)
 			self.a_password = self.new_pass
 			self.new_pass = None
-			self.message_function = self.standardseq_command
+			self.activate_standardseq()
 		else:
 			self.client.send("Passwords do not match!\nNew Password:")
 			self.message_function = self.chpass_new_prompt
@@ -326,6 +338,7 @@ class User:
 		for command in self.USER_COMMANDS:
 			if self.has_permission(self.USER_COMMANDS[command][2]):
 				helpstring += self.USER_COMMANDS[command][1] + '\n'
+		self.activate_standardseq()
 		return helpstring
 	def bye(self, args):
 		"""
@@ -336,8 +349,7 @@ class User:
 		"""
 		Changes the user password. Starts the "Change Password" Sequence
 		"""
-		self.client.send("Old password:")
-		self.message_function = self.chpass_old_prompt
+		self.client.activate_chpass()
 	def perms(self, args):
 		"""
 		Displays a list of permissions that the user has
@@ -348,6 +360,7 @@ class User:
 			for key in dm_global.PERMS_DICT:
 				if self.has_permission(dm_global.PERMS_DICT[key]):
 					self.client.send(key + "\n")
+		self.activate_standardseq()
 	#
 	# Other misc methods
 	#
