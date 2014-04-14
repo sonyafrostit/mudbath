@@ -60,12 +60,14 @@ class User:
 		client.send("Username (if this is your first visit, enter in a username to sign up): ")
 		self.message_function = self.login_uname
 		self.silenced = False
+		self.password_attempts = 0
 		self.logged_in = False # To prevent function calls when data has not yet been populated as necessary for preconditions
 	# functions to handle user input
 		# User Commands. Moderator commands, account commands, and one-to-one messaging commands.
 		self.USER_COMMANDS = {
 		'bye': (self.bye, "/bye - Logs out and exits the server", dm_global.USER),
-		'help': (self.help, "/help - Shows helpful information!", dm_global.USER)
+		'help': (self.help, "/help - Shows helpful information!", dm_global.USER),
+		'passwd': (self.passwd, "/passwd - Changes password", dm_global.USER)
 
 		}
 
@@ -107,6 +109,8 @@ class User:
 		"""
 		Used to get and validate user input for the password. Part 2 of Login Sequence
 		"""
+		self.password_attempts += 1
+
 		if len(message) == 0:
 			return
 		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
@@ -116,9 +120,14 @@ class User:
 			self.client.send("Last Visit was on %s\n"%(self.a_last_visit_date))
 			dm_global.db_conn.update_login_date(self.a_account_id)
 			self.message_function = self.standardseq_command
+			self.password_attempts = 0
 		else:
-			self.client.send("Incorrect Password. Please Try Again\n")
-			self.logout()
+			if self.password_attempts == 5:
+				self.client.send("Too many attempts. Disconnecting.")
+				self.client.deactivate()
+			else:
+				self.client.send("Incorrect Password. Please Try Again\n")
+				self.logout()
 
 
 	# NEW ACCOUNT SEQUENCE
@@ -227,6 +236,51 @@ class User:
 		else:
 			self.client.send(message)
 		self.client.send("\n>")
+	# CHANGE PASSWORD SEQUENCE
+	#
+	# 1. Prompt user for the old password. If the user inputs the correct password, then proceed to step 2. If the user doesn't, prompt them 4 more times and exit to standard sequence.
+	# 2. Prompt the user for a new password. Accept all non-blank input. Continue to step 3
+	# 3. Prompt the user to confirm their password. If they don't match, go back to step 2. If they do match, change the password and then go back to standard sequence.
+	def chpass_old_prompt(self, message):
+		"""
+		Entry point for Change password sequence. Prompts user for their password.
+		"""
+		if len(message) == 0:
+			return
+		self.password_attempts += 1
+		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
+			self.message_function = self.chpass_new_prompt
+			self.client.send("New Password: ")
+			self.password_attempts = 0
+		else:
+			if password_attempts == 5:
+				self.message_function = self.standardseq_command
+				self.client.send("Too many attempts, quitting")
+			else:
+				self.client.send("Incorrect password")
+	def chpass_new_prompt(self, message):
+		"""
+		Step 2 of Change password sequence. Prompts for a new password.
+		"""
+		if len(message) == 0:
+			return
+		self.new_pass = hashlib.sha256(message + dm_global.SALT).hexdigest() 
+		self.client.send("Confirm password: ")
+		self.message_function = self.chpass_new_confirm
+	def chpass_new_confirm(self, message):
+		"""
+		Step 3 of change password sequence. Prompts to confirm password.
+		"""
+		if len(message) == 0:
+			return
+		if self.new_pass == hashlib.sha256(message + dm_global.SALT).hexdigest():
+			dm_global.db_conn.change_account_id_attribute(self.new_pass, "password", self.a_account_id)
+			self.a_password = self.new_pass
+			self.new_pass = None
+			self.message_function = self.standardseq_command
+		else:
+			self.client.send("Passwords do not match!\nNew Password:")
+			self.message_function = self.standardseq_command
 	# USER COMMANDS
 	#
 	# These are for use by everyone, they're even left on for people who are banned, although the 'silenced' flag may disable some of them.
@@ -248,7 +302,12 @@ class User:
 		Deactivates the client for pickup by the main server loop
 		"""
 		self.client.deactivate()
-
+	def passwd(self, args):
+		"""
+		Changes the user password. Starts the "Change Password" Sequence
+		"""
+		self.client.send("Old password:")
+		self.message_function = self.chpass_old_prompt
 	#
 	# Other misc methods
 	#
