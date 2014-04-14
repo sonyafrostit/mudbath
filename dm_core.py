@@ -219,10 +219,10 @@ class User:
 		"""
 		helpstring = ""
 		for command in GLOBAL_COMMANDS:
-			if self.has_permission(GLOBAL_COMMANDS[command]):
+			if self.has_permission(GLOBAL_COMMANDS[command][2]):
 				helpstring += GLOBAL_COMMANDS[command][1] + '\n'
 		for command in self.USER_COMMANDS:
-			if self.has_permission(self.USER_COMMANDS[command]):
+			if self.has_permission(self.USER_COMMANDS[command][2]):
 				helpstring += self.USER_COMMANDS[command][1] + '\n'
 		return helpstring
 	def bye(self, args):
