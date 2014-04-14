@@ -253,7 +253,7 @@ class User:
 			self.client.send("New Password: ")
 			self.password_attempts = 0
 		else:
-			if password_attempts == 5:
+			if self.password_attempts == 5:
 				self.message_function = self.standardseq_command
 				self.client.send("Too many attempts, quitting")
 			else:
