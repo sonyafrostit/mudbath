@@ -25,7 +25,6 @@ def on_disconnect(client):
     """
     print "-- Lost connection to %s" % client.addrport()
     dm_global.USER_LIST.remove(dm_core.User(client))
-    dm_global.broadcast('%s leaves the conversation.\n' % client.addrport() )
 
 
 def kick_idle():
