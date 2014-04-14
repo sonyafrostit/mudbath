@@ -22,7 +22,9 @@ def on_disconnect(client):
     Handles lost connections.
     """
     print "-- Lost connection to %s" % client.addrport()
-    dm_global.USER_LIST.remove(dm_core.User(client))
+    for user in dm_global.USER_LIST:
+        if user.client == client:
+            dm_global.USER_LIST.remove(user)
 
 
 def kick_idle():
@@ -35,7 +37,7 @@ def kick_idle():
     for user in dm_global.USER_LIST:
         if user.client.idle() > dm_global.TIMEOUT:
             print('-- Kicking idle lobby client from %s' % user.client.addrport())
-            user.client.deactivate()
+            user.client.deactivate
 
 
 def process_clients():
