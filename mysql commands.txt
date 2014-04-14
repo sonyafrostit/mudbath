@@ -2,8 +2,8 @@ CREATE DATABASE mudbath;
 
 CREATE TABLE accounts (account_id INT AUTO_INCREMENT NOT NULL, permissions TINYINT NOT NULL, creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, account_name VARCHAR(128), last_visit_date DATETIME, display_name VARCHAR(256), PRIMARY KEY (account_id, account_name));
 
-INSERT INTO accounts(account_name, password, permissions) VALUES('root', '<password + salt hash>', 1);
+INSERT INTO accounts(account_name, password, permissions) VALUES('root', '< password hash + salt>', 1);
 
-CREATE TABLE serverdata(salt VARCHAR[16]);
+CREATE TABLE serverdata(salt VARCHAR[16], timeout INT);
 
-INSERT INTO serverdata(salt) VALUES ('<random string>');
+INSERT INTO serverdata(salt, timeout) VALUES ('<random string>', 0);

@@ -2,8 +2,6 @@
 import dm_global, dm_core
 from miniboa import TelnetServer
 
-IDLE_TIMEOUT = 300
-
 SERVER_RUN = True
 
 
@@ -31,9 +29,11 @@ def kick_idle():
     """
     Looks for idle clients and disconnects them by setting active to False.
     """
+    if dm_global.TIMEOUT == 0:
+        return
     ## Who hasn't been typing?
     for user in dm_global.USER_LIST:
-        if user.client.idle() > IDLE_TIMEOUT:
+        if user.client.idle() > dm_global.TIMEOUT:
             print('-- Kicking idle lobby client from %s' % user.client.addrport())
             user.client.active = False
 
