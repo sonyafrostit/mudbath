@@ -2,7 +2,7 @@ import hashlib, datetime, dm_global
 
 
 #
-# GLOBAL COMMANDS - commands that have to do with server-wide actions or target other users
+# GLOBAL COMMANDS - commands that have to do with server-wide actions or admin level stuff
 #
 
 def broadcast(args):
@@ -26,7 +26,7 @@ def change_permissions(args):
 	arg_list = args.lstrip().split(' ')
 	print arg_list
 	if len(arg_list) < 3:
-		return "Too few arguments. Bechange_permissions_cmd sure to use the format '/ch_perm <user> <+/-> <permission>'"
+		return "Too few arguments. Be sure to use the format '/ch_perm <user> <+/-> <permission>'"
 	elif arg_list[1] not in ("+", "-"):
 		return "Invalid argument. Be sure to use the format '/ch_perm <user> <+/-> <permission>'"
 	elif arg_list[2] not in dm_global.PERMS_DICT:
@@ -45,16 +45,23 @@ def get_permissions(args):
 	for key in dm_global.PERMS_DICT.keys():
 		s += "%s\n"%(key)
 	return s
+
+# Global commands dictionary
+
 GLOBAL_COMMANDS = {
-'broadcast': (broadcast,
+
+	'broadcast': (broadcast,
 	"/broadcast - Broadcasts a message",
 	dm_global.ADMIN),
-'ch_perm': (change_permissions,
+
+	'ch_perm': (change_permissions,
 	"/ch_perm - Changes the permissions for a particular user. Format: '/ch_perm <user> <+/-> <permission>'",
 	dm_global.ADMIN),
-'get_perm': (get_permissions,
+
+	'get_perm': (get_permissions,
 	"/get_perm - Displays a list of possible permissions",
 	dm_global.ADMIN)
+
 }
 
 #
@@ -76,18 +83,22 @@ class User:
 		# functions to handle user input
 		# User Commands. Moderator commands, account commands, and one-to-one messaging commands.
 		self.USER_COMMANDS = {
-		'bye': (self.bye,
-			"/bye - Logs out and exits the server",
-			dm_global.USER),
-		'help': (self.help,
-			"/help - Shows helpful information!",
-			dm_global.USER),
-		'passwd': (self.passwd,
-			"/passwd - Changes password",
-			dm_global.USER),
-		'perms': (self.perms,
-			"/perms - Shows you what your permissions are",
-			dm_global.USER)
+
+			'bye': (self.bye,
+				"/bye - Logs out and exits the server",
+				dm_global.USER),
+
+			'help': (self.help,
+				"/help - Shows helpful information!",
+				dm_global.USER),
+
+			'passwd': (self.passwd,
+				"/passwd - Changes password",
+				dm_global.USER),
+
+			'perms': (self.perms,
+				"/perms - Shows you what your permissions are",
+				dm_global.USER)
 
 		}
 
