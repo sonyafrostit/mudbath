@@ -342,7 +342,7 @@ class User:
 		"""
 		Displays a list of permissions that the user has
 		"""
-		if self.permissions = dm_global.ROOT:
+		if self.permissions == dm_global.ROOT:
 			self.client.send("Root")
 		for key in dm_global.PERMS_DICT:
 			if self.has_permission(dm_global.PERMS_DICT[key]):
