@@ -142,6 +142,7 @@ class User:
 			dm_global.db_conn.update_login_date(self.a_account_id)
 			self.message_function = self.standardseq_command
 			self.password_attempts = 0
+			self.client.send("\n>>")
 		else:
 			if self.password_attempts == 5:
 				self.client.send("Too many attempts. Disconnecting.")
@@ -347,7 +348,7 @@ class User:
 		"""
 		Changes the user password. Starts the "Change Password" Sequence
 		"""
-		self.client.activate_chpass()
+		self.activate_chpass()
 	def perms(self, args):
 		"""
 		Displays a list of permissions that the user has
