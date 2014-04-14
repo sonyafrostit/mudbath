@@ -247,7 +247,7 @@ class User:
 		"""
 		Deactivates the client for pickup by the main server loop
 		"""
-		self.client.active = False;
+		self.client.deactivate()
 
 	#
 	# Other misc methods

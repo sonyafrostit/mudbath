@@ -35,7 +35,7 @@ def kick_idle():
     for user in dm_global.USER_LIST:
         if user.client.idle() > dm_global.TIMEOUT:
             print('-- Kicking idle lobby client from %s' % user.client.addrport())
-            user.client.active = False
+            user.client.deactivate()
 
 
 def process_clients():
