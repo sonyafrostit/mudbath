@@ -344,9 +344,10 @@ class User:
 		"""
 		if self.a_permissions == dm_global.ROOT:
 			self.client.send("Root")
-		for key in dm_global.PERMS_DICT:
-			if self.has_permission(dm_global.PERMS_DICT[key]):
-				self.client.send(key)
+		else:
+			for key in dm_global.PERMS_DICT:
+				if self.has_permission(dm_global.PERMS_DICT[key]):
+					self.client.send(key + "\n")
 	#
 	# Other misc methods
 	#
