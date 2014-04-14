@@ -8,8 +8,10 @@ USER_LIST = []
 
 # Salt for the password table to protect against rainbow table attacks
 SALT = db_conn.execute_query("SELECT salt FROM serverdata;")[0][0]
+
 # Timeout for idle clients
 TIMEOUT = db_conn.execute_query("SELECT timeout FROM serverdata;")[0][0]
+
 # Permission Groups
 #
 # How it works: Addition and subtraction. If you want to add a person to a group, add the group to their a_permissions. As in, a_permissions += group. Subtract for taking away permissions.
@@ -23,15 +25,22 @@ ROOT = 1
 ADMIN = 2 
 # MODERATOR: Commands that have to do with ability to moderate the game and issue bans/lower-level permissions. Chat channels
 MODERATOR = 4
+
 USER = 8
+
 CHANNEL = 16
 
 # For use when parsing commands only. Use the previous groups to programattically add permissons
 PERMS_DICT = {
-"Admin" : ADMIN,
-"Mod" : MODERATOR,
-"User" : USER, # Avoid removing this permission! It prevents you from even logging out!
-"Chan" : CHANNEL,
+
+	"Admin" : ADMIN,
+
+	"Mod" : MODERATOR,
+
+	"User" : USER, # Avoid removing this permission! It prevents you from even logging out!
+
+	"Chan" : CHANNEL,
+
 }
 
 DEFAULT_PERMISSIONS = USER + CHANNEL
