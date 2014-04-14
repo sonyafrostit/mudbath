@@ -79,6 +79,8 @@ class User:
 		"""
 		Used to get username input from end user. Start of Login Sequence.
 		"""
+		if len(message) == 0:
+			return
 		# Corresponds to database entry, but this one is special because we need it to get the rest of the data. Also, the New Account Sequence needs a value for the username
 		self.a_account_name = message
 		user_data = dm_global.db_conn.get_user_info(message) # Query database for user info
@@ -105,6 +107,8 @@ class User:
 		"""
 		Used to get and validate user input for the password. Part 2 of Login Sequence
 		"""
+		if len(message) == 0:
+			return
 		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
 			# TODO Implement Standard Sequence
 			self.client.send("Welcome!\n\n")
@@ -130,6 +134,8 @@ class User:
 		"""
 		Confirm user wants to make a new account. Beginning point of New Account Sequence
 		"""
+		if len(message) == 0:
+			return
 		if message.upper()[0] == 'Y': # Only check the first letter, because it covers the most cases.
 			self.message_function = self.newaccount_usernameconfirm;
 			self.client.send("You entered in username %s. Is this OK? (Yes/No)"%(self.a_account_name))
@@ -144,6 +150,8 @@ class User:
 		"""
 		Confirm that the username is good with the user. Step 2 of New Account Sequence
 		"""
+		if len(message) == 0:
+			return
 		if message.upper()[0] == 'Y':
 			self.message_function = self.newaccount_password;
 			self.client.send("Enter a Password (Warning: This will be sent over insecure connection): ")
@@ -156,6 +164,8 @@ class User:
 		"""
 		Get a username. Step 3 of New Account Sequence
 		"""
+		if len(message) == 0:
+			return
 		self.a_account_name = message
 		if dm_global.db_conn.check_for_username(self.a_account_name):
 			self.message_function = self.newaccount_usernameconfirm;
@@ -167,6 +177,8 @@ class User:
 		"""
 		Get a password. Step 4 of New Account Sequence
 		"""
+		if len(message) == 0:
+			return
 		self.a_password = hashlib.sha256(message + dm_global.SALT).hexdigest()
 		self.message_function = self.newaccount_passwordconfirm;
 		self.client.send("Confirm Password: ")
@@ -174,6 +186,8 @@ class User:
 		"""
 		Confirm password and finish. Step 5 of New Account Sequence
 		"""
+		if len(message) == 0:
+			return
 		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
 
 			self.a_permissions = dm_global.DEFAULT_PERMISSIONS
@@ -191,8 +205,12 @@ class User:
 			self.client.send("Enter a Password (Warning: This will be sent over insecure connection): ")
 	# TODO Implement
 	def standardseq_command(self, message):
+		if len(message) == 0:
+			return
 		if message[0] == '/':
 			command = ""
+			if len(message) == 1:
+				return
 			if message.find(' ') > -1:
 				command = message[1:message.find(' ')]
 				args = message[message.find(' '):]
