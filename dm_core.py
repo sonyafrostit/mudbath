@@ -70,7 +70,7 @@ class User:
 		self.message_function = self.login_uname
 		self.silenced = False
 		self.password_attempts = 0
-		self.prompt = ">>"
+
 		# To prevent function calls when data has not yet been populated as necessary for preconditions
 		self.logged_in = False 
 		# functions to handle user input
@@ -140,7 +140,7 @@ class User:
 			self.logged_in = True
 			self.client.send("Last Visit was on %s\n"%(self.a_last_visit_date))
 			dm_global.db_conn.update_login_date(self.a_account_id)
-			self.activate_standardseq()
+			self.message_function = self.standardseq_command
 			self.password_attempts = 0
 		else:
 			if self.password_attempts == 5:
@@ -235,7 +235,7 @@ class User:
 			self.a_account_id = autogens[0]
 			self.a_creation_date = autogens[1]
 			self.logged_in = True
-			self.client.send("Welcome!\n\n")
+			self.client.send("Welcome!")
 			self.message_function = self.standardseq_command
 			
 		else:
@@ -247,9 +247,6 @@ class User:
 	#
 	# Take user input and match it with all commands
 	# Be sure to check command permissions.
-	def activate_standardseq(self):
-		self.client.send(self.prompt)
-		self.message_function = self.standardseq_command
 	def standardseq_command(self, message):
 		if len(message) == 0:
 			return
@@ -272,6 +269,8 @@ class User:
 				# We don't show if you don't have permissions or if its a typo. We just remove all access.
 		else:
 			self.client.send(message)
+		if self.message_function == self.standardseq_command:
+			self.client.send("\n>>")
 	# CHANGE PASSWORD SEQUENCE
 	#
 	# 1. Prompt user for the old password. If the user inputs the correct password, then proceed to step 2. 
@@ -318,7 +317,7 @@ class User:
 			dm_global.db_conn.change_account_id_attribute("password", self.new_pass, self.a_account_id)
 			self.a_password = self.new_pass
 			self.new_pass = None
-			self.activate_standardseq()
+			self.message_function = self.standardseq_command
 		else:
 			self.client.send("Passwords do not match!\nNew Password:")
 			self.message_function = self.chpass_new_prompt
@@ -338,7 +337,6 @@ class User:
 		for command in self.USER_COMMANDS:
 			if self.has_permission(self.USER_COMMANDS[command][2]):
 				helpstring += self.USER_COMMANDS[command][1] + '\n'
-		self.activate_standardseq()
 		return helpstring
 	def bye(self, args):
 		"""
@@ -360,7 +358,6 @@ class User:
 			for key in dm_global.PERMS_DICT:
 				if self.has_permission(dm_global.PERMS_DICT[key]):
 					self.client.send(key + "\n")
-		self.activate_standardseq()
 	#
 	# Other misc methods
 	#
