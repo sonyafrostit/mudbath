@@ -192,8 +192,8 @@ class User:
 
 			self.a_permissions = dm_global.DEFAULT_PERMISSIONS
 			autogens = dm_global.db_conn.write_new_user(self) # Write to database and get the creation date and id
-			self.a_creation_date = autogens[0]
-			self.a_display_name = autogens[1]
+			self.a_account_id = autogens[0]
+			self.a_creation_date = autogens[1]
 			self.logged_in = True
 			self.client.send("Welcome!")
 			self.message_function = self.standardseq_command
