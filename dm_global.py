@@ -7,8 +7,9 @@ db_conn = dm_db.DatabaseConnection(username='mudbath', password='St1ll@l1v3!', d
 USER_LIST = []
 
 # Salt for the password table to protect against rainbow table attacks
-SALT = db_conn.execute_query("SELECT salt FROM serverdata;")[0][0];
-
+SALT = db_conn.execute_query("SELECT salt FROM serverdata;")[0][0]
+# Timeout for idle clients
+TIMEOUT = db_conn.execute_query("SELECT timeout FROM serverdata;")[0][0]
 # Permission Groups
 #
 # How it works: Addition and subtraction. If you want to add a person to a group, add the group to their a_permissions. As in, a_permissions += group. Subtract for taking away permissions.
@@ -16,7 +17,7 @@ SALT = db_conn.execute_query("SELECT salt FROM serverdata;")[0][0];
 # To check for permissions, use modulus. (I.E, if someone is ROOT, then a_permissions % 2 > 0, if ADMIN, then a_permissions % 4 > 1, if MODERATOR then a_permissions % 8 > 3 ) For an implementation, look at User.has_permission()
 #
 
-# ROOT: All commands, trump card
+# ROOT: All commands, trump card. DONT USE THIS PERMISSION!
 ROOT = 1
 # ADMIN: Commands that have to do with the server
 ADMIN = 2 
