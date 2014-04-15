@@ -12,6 +12,12 @@ SALT = db_conn.execute_query("SELECT salt FROM serverdata;")[0][0]
 # Timeout for idle clients
 TIMEOUT = db_conn.execute_query("SELECT timeout FROM serverdata;")[0][0]
 
+# Welcome message: On Connect
+WELCOME_MESSAGE = db_conn.execute_query("SELECT welcome FROM serverdata;")[0][0]
+
+# Login Message: On Login
+LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")
+
 # Permission Groups
 #
 # How it works: Addition and subtraction. If you want to add a person to a group, add the group to their a_permissions. As in, a_permissions += group. Subtract for taking away permissions.

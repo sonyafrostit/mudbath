@@ -14,6 +14,7 @@ class User:
 
 	def __init__(self, client):
 		self.client = client # Our TCP/Telnet Client
+		self.client.send(dm_global.WELCOME_MESSAGE)
 		# Begin Login Sequence:
 		client.send("Username (if this is your first visit, enter in a username to sign up): ")
 		self.message_function = self.login_uname
@@ -109,7 +110,7 @@ class User:
 			return
 		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
 			# TODO Implement Standard Sequence
-			self.client.send("Welcome!\n\n")
+			self.client.send(dm_global.WELCOME_MESSAGE)
 			self.logged_in = True
 			self.client.send("Last Visit was on %s\n"%(self.a_last_visit_date))
 			dm_global.db_conn.update_login_date(self.a_account_id)
@@ -342,13 +343,14 @@ class User:
 		Displays the help string for each command
 		"""
 		if args == "":
-			helpstring = ""
+			helpstring = "List of Commands: \n\n"
 			for command in self.GLOBAL_COMMANDS:
 				if self.has_permission(self.GLOBAL_COMMANDS[command][2]):
 					helpstring += self.GLOBAL_COMMANDS[command][1] + '\n'
 			for command in self.USER_COMMANDS:
 				if self.has_permission(self.USER_COMMANDS[command][2]):
 					helpstring += self.USER_COMMANDS[command][1] + '\n'
+			helpstring += "\n\nList of help files. To read, type in the '/help' command, followed by the name of the file.\nExample: '/help About' reads the 'About' file.:"
 			for hfile in HELPFILES:
 				helpstring += hfile
 			return helpstring
