@@ -306,18 +306,21 @@ class User:
 	# 2. Get the text of the file using a MultilineInput
 	# 3. Submit it to the database when the user puts in "end"
 	#
-	def hf_title(self, args):
+	def hf_title(self, message):
 		"""
 		Adds a helpfile that users can access by entering the 'help' command followed by the filename.
 		Step 1 (and the setup for 2) of the Helpfile sequence
 		"""
 		if len(args) == 0:
 			return
+		if message in HELPFILES:
+			self.client.send("That file already exists!")
+			return
 		self.helpfile_title = args
 		#Step 2 stuff!
 		helpfile_body = MultilineInput(self.hf_submit)
 		self.message_function = helpfile_body.input
-		self.client.send("Text (type 'end' on its own line to end input): ")
+		self.client.send("Text (type 'end' on its own line to end input):\n")
 	def hf_submit(self, fulltext):
 		"""
 		Finalizes the helpfile and submits it to the database.
@@ -325,7 +328,7 @@ class User:
 		"""
 		dm_global.db_conn.create_helpfile(self.helpfile_title, fulltext)
 		self.message_function = self.standardseq_command;
-		HELPFILES[helpfile_title] = fulltext
+		HELPFILES[self.helpfile_title] = fulltext
 		self.helpfile_title = None
 
 		self.client.send(">>")
