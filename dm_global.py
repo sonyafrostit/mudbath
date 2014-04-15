@@ -16,7 +16,7 @@ TIMEOUT = db_conn.execute_query("SELECT timeout FROM serverdata;")[0][0]
 WELCOME_MESSAGE = db_conn.execute_query("SELECT welcome FROM serverdata;")[0][0]
 
 # Login Message: On Login
-LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")
+LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")[0][0]
 
 # Permission Groups
 #
