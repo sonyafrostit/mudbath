@@ -414,10 +414,12 @@ class User:
 		self.client.send("Enter the new banner text:\n")
 		mli = MultilineInput(self.welcome_edit_write)
 		self.message_function = mli.input
+
 	def welcome_edit_write(self, text):
 		dm_global.db_conn.write_welcome_banner(text)
 		self.message_function = self.standardseq_command
-
+		dm_global.WELCOME_MESSAGE = text
+		self.client.send(">>")
 	def login_edit(self, args):
 		"""
 		Changes the login banner
@@ -428,6 +430,8 @@ class User:
 	def login_edit_write(self, text):
 		dm_global.db_conn.write_login_banner(text)
 		self.message_function = self.standardseq_command
+		dm_global.LOGIN_MESSAGE = text
+		self.client.send(">>")
 	# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
 	# They can also shadowban.
 	# Even administrators should use these commands instead when dealing with rogue users,
