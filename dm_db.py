@@ -40,7 +40,7 @@ class DatabaseConnection:
 		Creates a new helpfile
 		"""
 		self.execute_query("INSERT INTO helpfiles(title, fullfile) VALUES (%s, %s);", [title, helpfile_text])
-
+		self.conn.commit()
 	# Account management
 	def get_user_info(self, username):
 		"""
