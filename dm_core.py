@@ -311,7 +311,7 @@ class User:
 		Adds a helpfile that users can access by entering the 'help' command followed by the filename.
 		Step 1 (and the setup for 2) of the Helpfile sequence
 		"""
-		if len(args) == 0:
+		if len(message) == 0:
 			return
 		if message in HELPFILES:
 			self.client.send("That file already exists!")
