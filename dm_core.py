@@ -56,6 +56,10 @@ class User:
 				"/login_edit - Changes the login banner which displays on login",
 				dm_global.ADMIN),
 
+			'newuser_edit': (self.newuser_edit,
+				"/newuser_edit - Changes the banner which displays on creation of a new account",
+				dm_global.ADMIN),
+
 			'broadcast': (self.broadcast,
 				"/broadcast - Broadcasts a message",
 				dm_global.ADMIN),
@@ -218,7 +222,7 @@ class User:
 			self.a_account_id = autogens[0]
 			self.a_creation_date = autogens[1]
 			self.logged_in = True
-			self.client.send("Welcome!")
+			self.client.send(dm_global.NEW_USER_MESSAGE)
 			self.message_function = self.standardseq_command
 			
 		else:
@@ -431,6 +435,18 @@ class User:
 		dm_global.db_conn.write_login_banner(text)
 		self.message_function = self.standardseq_command
 		dm_global.LOGIN_MESSAGE = text
+		self.client.send(">>")
+	def newuser_edit(self, args):
+		"""
+		Changes the new user banner
+		"""
+		self.client.send("Enter the new banner text:\n")
+		mli = MultilineInput(self.newuser_edit_write)
+		self.message_function = mli.input
+	def newuser_edit_write(self, text):
+		dm_global.db_conn.write_newuser_banner(text)
+		self.message_function = self.standardseq_command
+		dm_global.NEW_USER_MESSAGE = text
 		self.client.send(">>")
 	# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
 	# They can also shadowban.

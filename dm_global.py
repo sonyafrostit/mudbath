@@ -18,6 +18,7 @@ WELCOME_MESSAGE = db_conn.execute_query("SELECT welcome FROM serverdata;")[0][0]
 # Login Message: On Login
 LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")[0][0]
 
+NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0]
 # Permission Groups
 #
 # How it works: Addition and subtraction. If you want to add a person to a group, add the group to their a_permissions. As in, a_permissions += group. Subtract for taking away permissions.

@@ -32,6 +32,9 @@ class DatabaseConnection:
 	def write_welcome_banner(self, text):
 		self.execute_query("UPDATE serverdata SET welcome=%s;", [text])
 		self.conn.commit()
+	def write_newuser_banner(self, text):
+		self.execute_query("UPDATE serverdata SET newuser=%s;", [text])
+		self.conn.commit()
 	# Helpfiles stuff
 	def get_helpfiles(self):
 		"""
