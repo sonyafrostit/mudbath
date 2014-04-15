@@ -223,6 +223,7 @@ class User:
 			self.a_creation_date = autogens[1]
 			self.logged_in = True
 			self.client.send(dm_global.NEW_USER_MESSAGE)
+			self.client.send("\n\n>>")
 			self.message_function = self.standardseq_command
 			
 		else:
