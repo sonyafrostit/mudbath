@@ -241,7 +241,7 @@ class User:
 				command = message[1:]
 				args = ""
 			if command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
-				self.client.send(self.git puGLOBAL_COMMANDS[command][0](args))
+				self.client.send(self.GLOBAL_COMMANDS[command][0](args))
 			elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
 				self.client.send(self.USER_COMMANDS[command][0](args))
 			else:	
