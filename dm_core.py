@@ -14,7 +14,7 @@ class User:
 
 	def __init__(self, client):
 		self.client = client # Our TCP/Telnet Client
-		self.client.send(dm_global.WELCOME_MESSAGE)
+		self.client.send(dm_global.WELCOME_MESSAGE + "\n")
 		# Begin Login Sequence:
 		client.send("Username (if this is your first visit, enter in a username to sign up): ")
 		self.message_function = self.login_uname
@@ -110,7 +110,7 @@ class User:
 			return
 		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
 			# TODO Implement Standard Sequence
-			self.client.send(dm_global.WELCOME_MESSAGE)
+			self.client.send(dm_global.LOGIN_MESSAGE + "\n")
 			self.logged_in = True
 			self.client.send("Last Visit was on %s\n"%(self.a_last_visit_date))
 			dm_global.db_conn.update_login_date(self.a_account_id)
