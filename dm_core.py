@@ -389,7 +389,6 @@ class User:
 		Change the permissions of a particular user. Args in the format of <user> <+/-> <permission>
 		"""
 		arg_list = args.lstrip().split(' ')
-		print arg_list
 		if len(arg_list) < 3:
 			return "Too few arguments. Be sure to use the format '/ch_perm <user> <+/-> <permission>'"
 		elif arg_list[1] not in ("+", "-"):
@@ -459,9 +458,7 @@ class MultilineInput:
 		if len(message) == 0:
 			self.text += "\n"
 		elif message == "end":
-			print self.text
 			self.callback(self.text)
 		else:
-			print self.text
 			self.text += str(message)
 			self.text += "\n"
