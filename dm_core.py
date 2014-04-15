@@ -48,18 +48,20 @@ class User:
 		self.GLOBAL_COMMANDS = {
 
 			'broadcast': (self.broadcast,
-			"/broadcast - Broadcasts a message",
-			dm_global.ADMIN),
+				"/broadcast - Broadcasts a message",
+				dm_global.ADMIN),
 
 			'ch_perm': (self.change_permissions,
-			"/ch_perm - Changes the permissions for a particular user. Format: '/ch_perm <user> <+/-> <permission>'",
-			dm_global.ADMIN),
+				"/ch_perm - Changes the permissions for a particular user. Format: '/ch_perm <user> <+/-> <permission>'",
+				dm_global.ADMIN),
 
 			'get_perm': (self.get_permissions,
-			"/get_perm - Displays a list of possible permissions",
-			dm_global.ADMIN),
+				"/get_perm - Displays a list of possible permissions",
+				dm_global.ADMIN),
 
-			'write_helpfile': (self.write_helpfile, "/write_helpfile - Writes a new helpfile for users to read!", dm_global.MODERATOR)
+			'write_helpfile': (self.write_helpfile,
+				"/write_helpfile - Writes a new helpfile for users to read!",
+				dm_global.MODERATOR)
 
 		}
 	# LOGIN SEQUENCE
@@ -215,10 +217,12 @@ class User:
 			
 			self.message_function = newaccount_password
 			self.client.send("Enter a Password (Warning: This will be sent over insecure connection): ")
+
 	# STANDARD SEQUENCE
 	#
 	# Take user input and match it with all commands
 	# Be sure to check command permissions.
+
 	def standardseq_command(self, message):
 		if len(message) == 0:
 			return
@@ -243,6 +247,7 @@ class User:
 			self.client.send(message)
 		if self.message_function == self.standardseq_command:
 			self.client.send("\n>>")
+
 	# CHANGE PASSWORD SEQUENCE
 	#
 	# 1. Prompt user for the old password. If the user inputs the correct password, then proceed to step 2. 
@@ -250,6 +255,7 @@ class User:
 	# 2. Prompt the user for a new password. Accept all non-blank input. Continue to step 3
 	# 3. Prompt the user to confirm their password. If they don't match, go back to step 2. 
 	#    If they do match, change the password and then go back to standard sequence.
+
 	def activate_chpass(self):
 		self.client.send("Old password:")
 		self.message_function = self.chpass_old_prompt
@@ -332,14 +338,23 @@ class User:
 		"""
 		Displays the help string for each command
 		"""
-		helpstring = ""
-		for command in self.GLOBAL_COMMANDS:
-			if self.has_permission(self.GLOBAL_COMMANDS[command][2]):
-				helpstring += self.GLOBAL_COMMANDS[command][1] + '\n'
-		for command in self.USER_COMMANDS:
-			if self.has_permission(self.USER_COMMANDS[command][2]):
-				helpstring += self.USER_COMMANDS[command][1] + '\n'
-		return helpstring
+		if args == "":
+			helpstring = ""
+			for command in self.GLOBAL_COMMANDS:
+				if self.has_permission(self.GLOBAL_COMMANDS[command][2]):
+					helpstring += self.GLOBAL_COMMANDS[command][1] + '\n'
+			for command in self.USER_COMMANDS:
+				if self.has_permission(self.USER_COMMANDS[command][2]):
+					helpstring += self.USER_COMMANDS[command][1] + '\n'
+			for hfile in HELPFILES:
+				helpstring += hfile
+			return helpstring
+		elif args in HELPFILES:
+			return HELPFILES[args]
+		elif args in self.GLOBAL_COMMANDS:
+			return self.GLOBAL_COMMANDS[args][1]
+		else:
+			return "Helpfile %s not found. Try /help on its own to see a list of helpfiles and commands" % (args)
 	def bye(self, args):
 		"""
 		Deactivates the client for pickup by the main server loop
