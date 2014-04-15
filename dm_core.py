@@ -316,7 +316,7 @@ class User:
 		if message in HELPFILES:
 			self.client.send("That file already exists!")
 			return
-		self.helpfile_title = args
+		self.helpfile_title = message
 		#Step 2 stuff!
 		helpfile_body = MultilineInput(self.hf_submit)
 		self.message_function = helpfile_body.input
