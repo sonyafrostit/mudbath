@@ -238,8 +238,8 @@ class User:
 			else:
 				command = message[1:]
 				args = ""
-			if command in GLOBAL_COMMANDS and self.has_permission(GLOBAL_COMMANDS[command][2]):
-				self.client.send(GLOBAL_COMMANDS[command][0](args))
+			if command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
+				self.client.send(self.GLOBAL_COMMANDS[command][0](args))
 			elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
 				self.client.send(self.USER_COMMANDS[command][0](args))
 			else:	
