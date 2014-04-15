@@ -27,12 +27,19 @@ class DatabaseConnection:
 		return cursor.fetchall()
 	# Helpfiles stuff
 	def get_helpfiles(self):
-		query_results = self.execute_query("SELECT name, fullfile FROM helpfiles;")
+		"""
+		Pulls helpfiles from the database
+		"""
+		query_results = self.execute_query("SELECT title, fullfile FROM helpfiles;")
 		helpfiles_dict = {}
 		for helpfile in query_results:
 			helpfiles_dict[helpfile[0]] = helpfile[1]
 		return helpfiles_dict
-		
+	def create_helpfile(self, title, helpfile_text):
+		"""
+		Creates a new helpfile
+		"""
+		self.execute_query("INSERT INTO helpfiles(title, fullfile) VALUES ( %s, %s);", [title, helpfile_text])
 
 	# Account management
 	def get_user_info(self, username):
