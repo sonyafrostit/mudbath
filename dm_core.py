@@ -317,7 +317,7 @@ class User:
 		"""
 		Finalizes the helpfile and submits it to the database.
 		"""
-		dm_global.db_conn.create_helpfile(self.helpfile_title fulltext)
+		dm_global.db_conn.create_helpfile(self.helpfile_title, fulltext)
 		self.message_function = standardseq_command();
 		self.helpfile_title = None
 		self.client.send(">>")
