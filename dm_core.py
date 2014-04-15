@@ -363,9 +363,10 @@ class User:
 			for command in self.USER_COMMANDS:
 				if self.has_permission(self.USER_COMMANDS[command][2]):
 					helpstring += self.USER_COMMANDS[command][1] + '\n'
-			helpstring += "\n\nList of help files. To read, type in the '/help' command, followed by the name of the file.\nExample: '/help About' reads the 'About' file.:"
+			helpstring += "\n\nList of help files. To read, type in the '/help' command, followed by the name of the file.\nExample: '/help About' reads the 'About' file.:\n\n"
 			for hfile in HELPFILES:
 				helpstring += hfile
+			helpstring += "\n"
 			return helpstring
 		elif args in HELPFILES:
 			return HELPFILES[args]
