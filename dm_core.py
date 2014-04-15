@@ -50,11 +50,11 @@ class User:
 
 			'welcome_edit': (self.welcome_edit,
 				"/welcome_edit - Changes the welcome banner which displays on connect",
-				dm_global.ADMIN)
+				dm_global.ADMIN),
 
 			'login_edit': (self.login_edit,
 				"/login_edit - Changes the login banner which displays on login",
-				dm_global.ADMIN)
+				dm_global.ADMIN),
 
 			'broadcast': (self.broadcast,
 				"/broadcast - Broadcasts a message",
