@@ -67,7 +67,7 @@ class User:
 			"/get_perm - Displays a list of possible permissions",
 			dm_global.ADMIN),
 
-			'write_helpfile': (self.)
+			'write_helpfile': (self.write_helpfile, "/write_helpfile - Writes a new helpfile for users to read!", dm_global.MODERATOR)
 
 		}
 	# LOGIN SEQUENCE
