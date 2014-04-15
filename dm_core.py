@@ -377,7 +377,7 @@ class User:
 		"""
 		Start create helpfile sequence
 		"""
-		self.message_function = hf_title
+		self.message_function = self.hf_title
 		self.client.send("Title: ")
 	# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
 	# They can also shadowban.
