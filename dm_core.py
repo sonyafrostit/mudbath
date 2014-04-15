@@ -48,6 +48,14 @@ class User:
 
 		self.GLOBAL_COMMANDS = {
 
+			'welcome_edit': (self.welcome_edit,
+				"/welcome_edit - Changes the welcome banner which displays on connect",
+				dm_global.ADMIN)
+
+			'login_edit': (self.login_edit,
+				"/login_edit - Changes the login banner which displays on login",
+				dm_global.ADMIN)
+
 			'broadcast': (self.broadcast,
 				"/broadcast - Broadcasts a message",
 				dm_global.ADMIN),
@@ -398,6 +406,28 @@ class User:
 		"""
 		self.message_function = self.hf_title
 		self.client.send("Title: ")
+
+	def welcome_edit(self, args):
+		"""
+		Changes the welcome (on connect) banner
+		"""
+		self.client.send("Enter the new banner text:\n")
+		mli = MultilineInput(self.welcome_edit_write)
+		self.message_function = mli.input
+	def welcome_edit_write(self, text):
+		dm_global.db_conn.write_welcome_banner(text)
+		self.message_function = self.standardseq_command
+
+	def login_edit(self, args):
+		"""
+		Changes the login banner
+		"""
+		self.client.send("Enter the new banner text:\n")
+		mli = MultilineInput(self.login_edit_write)
+		self.message_function = mli.input
+	def login_edit_write(self, text):
+		dm_global.db_conn.write_login_banner(text)
+		self.message_function = self.standardseq_command
 	# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
 	# They can also shadowban.
 	# Even administrators should use these commands instead when dealing with rogue users,
