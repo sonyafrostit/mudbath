@@ -232,7 +232,7 @@ class User:
 				return
 			if message.find(' ') > -1:
 				command = message[1:message.find(' ')]
-				args = message[message.find(' '):]
+				args = message[message.find(' ') + 1:]
 			else:
 				command = message[1:]
 				args = ""
