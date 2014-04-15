@@ -65,7 +65,9 @@ class User:
 
 			'get_perm': (self.get_permissions,
 			"/get_perm - Displays a list of possible permissions",
-			dm_global.ADMIN)
+			dm_global.ADMIN),
+
+			'write_helpfile': (self.)
 
 		}
 	# LOGIN SEQUENCE
@@ -239,7 +241,7 @@ class User:
 				command = message[1:]
 				args = ""
 			if command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
-				self.client.send(self.GLOBAL_COMMANDS[command][0](args))
+				self.client.send(self.git puGLOBAL_COMMANDS[command][0](args))
 			elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
 				self.client.send(self.USER_COMMANDS[command][0](args))
 			else:	
@@ -313,6 +315,7 @@ class User:
 		self.helpfile_title = args
 		helpfile_body = MultilineInput(selfhf_submit)
 		self.message_function = helpfile_body.input
+		self.client.send("Text (type 'end' on its own line to end input): ")
 	def hf_submit(self, fulltext):
 		"""
 		Finalizes the helpfile and submits it to the database.
@@ -370,7 +373,12 @@ class User:
 			if user.logged_in:
 				user.client.send(args)
 		return ""
-
+	def write_helpfile(self, args):
+		"""
+		Start create helpfile sequence
+		"""
+		self.message_function = hf_title
+		self.client.send("Title: ")
 	# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
 	# They can also shadowban.
 	# Even administrators should use these commands instead when dealing with rogue users,
