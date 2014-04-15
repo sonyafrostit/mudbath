@@ -313,7 +313,7 @@ class User:
 		if len(args) == 0:
 			return
 		self.helpfile_title = args
-		helpfile_body = MultilineInput(selfhf_submit)
+		helpfile_body = MultilineInput(self.hf_submit)
 		self.message_function = helpfile_body.input
 		self.client.send("Text (type 'end' on its own line to end input): ")
 	def hf_submit(self, fulltext):
