@@ -1,68 +1,18 @@
 import hashlib, datetime, dm_global
 
-
 #
-# GLOBAL COMMANDS - commands that have to do with server-wide actions or admin level stuff
+# HELPFILES - A way to create some helpfiles for the benefit of users! Hopefully they'll read 'em....hopefully
 #
 
-def broadcast(args):
-	"""
-	Send msg to every client.
-	"""
-	for user in dm_global.USER_LIST:
-		if user.logged_in:
-			user.client.send(args)
-	return ""
+HELPFILES = dm_global.db_conn.get_helpfiles()
 
-# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
-# They can also shadowban.
-# Even administrators should use these commands instead when dealing with rogue users,
-# because they send alerts to user inboxes. (Or they will when implemented)
-# These should be used to make users mods or admins
-def change_permissions(args):
-	"""
-	Change the permissions of a particular user. Args in the format of <user> <+/-> <permission>
-	"""
-	arg_list = args.lstrip().split(' ')
-	print arg_list
-	if len(arg_list) < 3:
-		return "Too few arguments. Be sure to use the format '/ch_perm <user> <+/-> <permission>'"
-	elif arg_list[1] not in ("+", "-"):
-		return "Invalid argument. Be sure to use the format '/ch_perm <user> <+/-> <permission>'"
-	elif arg_list[2] not in dm_global.PERMS_DICT:
-		return "Invalid permissions. Use the /get_perm command to view all valid permission types."
-	else:
-		if arg_list[1] == "-":
-			return dm_global.db_conn.change_permissions_cmd(arg_list[0], -1 * dm_global.PERMS_DICT[arg_list[2]])
-		else:
-			return dm_global.db_conn.change_permissions_cmd(arg_list[0], dm_global.PERMS_DICT[arg_list[2]])
 
-def get_permissions(args):
-	"""
-	Displays a list of permissions groups
-	"""
-	s = ""
-	for key in dm_global.PERMS_DICT.keys():
-		s += "%s\n"%(key)
-	return s
 
-# Global commands dictionary
 
-GLOBAL_COMMANDS = {
 
-	'broadcast': (broadcast,
-	"/broadcast - Broadcasts a message",
-	dm_global.ADMIN),
 
-	'ch_perm': (change_permissions,
-	"/ch_perm - Changes the permissions for a particular user. Format: '/ch_perm <user> <+/-> <permission>'",
-	dm_global.ADMIN),
 
-	'get_perm': (get_permissions,
-	"/get_perm - Displays a list of possible permissions",
-	dm_global.ADMIN)
 
-}
 
 #
 # User Class - Used to connect server to user
@@ -101,7 +51,23 @@ class User:
 				dm_global.USER)
 
 		}
+		# Global commands dictionary
 
+		self.GLOBAL_COMMANDS = {
+
+			'broadcast': (self.broadcast,
+			"/broadcast - Broadcasts a message",
+			dm_global.ADMIN),
+
+			'ch_perm': (self.change_permissions,
+			"/ch_perm - Changes the permissions for a particular user. Format: '/ch_perm <user> <+/-> <permission>'",
+			dm_global.ADMIN),
+
+			'get_perm': (self.get_permissions,
+			"/get_perm - Displays a list of possible permissions",
+			dm_global.ADMIN)
+
+		}
 	# LOGIN SEQUENCE
 	#
 	# 1. Get Username input from user and look up in database.
@@ -277,7 +243,7 @@ class User:
 			elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
 				self.client.send(self.USER_COMMANDS[command][0](args))
 			else:	
-				self.client.send("Command either does not exist or you do not have permission to do that.Try '/help' if you're lost!\n")
+				self.client.send("Command either does not exist or you do not have permission to do that. Try '/help' if you're lost!\n")
 				# We don't show if you don't have permissions or if its a typo. We just remove all access.
 		else:
 			self.client.send(message)
@@ -333,6 +299,28 @@ class User:
 		else:
 			self.client.send("Passwords do not match!\nNew Password:")
 			self.message_function = self.chpass_new_prompt
+	#
+	# HELPFILE SEQUENCE
+	#
+	#
+	#
+	def hf_title(self, args):
+		"""
+		Adds a helpfile that users can access by entering the 'help' command followed by the filename.
+		"""
+		if len(args) == 0:
+			return
+		self.helpfile_title = args
+		helpfile_body = MultilineInput(selfhf_submit)
+		self.message_function = helpfile_body.input
+	def hf_submit(self, fulltext):
+		"""
+		Finalizes the helpfile and submits it to the database.
+		"""
+		dm_global.db_conn.create_helpfile(self.helpfile_title fulltext)
+		self.message_function = standardseq_command();
+		self.helpfile_title = None
+		self.client.send(">>")
 	# USER COMMANDS
 	#
 	# These are for use by everyone. They're even left on for people who are banned,
@@ -343,9 +331,9 @@ class User:
 		Displays the help string for each command
 		"""
 		helpstring = ""
-		for command in GLOBAL_COMMANDS:
-			if self.has_permission(GLOBAL_COMMANDS[command][2]):
-				helpstring += GLOBAL_COMMANDS[command][1] + '\n'
+		for command in self.GLOBAL_COMMANDS:
+			if self.has_permission(self.GLOBAL_COMMANDS[command][2]):
+				helpstring += self.GLOBAL_COMMANDS[command][1] + '\n'
 		for command in self.USER_COMMANDS:
 			if self.has_permission(self.USER_COMMANDS[command][2]):
 				helpstring += self.USER_COMMANDS[command][1] + '\n'
@@ -370,6 +358,51 @@ class User:
 			for key in dm_global.PERMS_DICT:
 				if self.has_permission(dm_global.PERMS_DICT[key]):
 					self.client.send(key + "\n")
+	#
+	# GLOBAL COMMANDS - commands that have to do with server-wide actions or admin level stuff
+	#
+
+	def broadcast(self, args):
+		"""
+		Send msg to every client.
+		"""
+		for user in dm_global.USER_LIST:
+			if user.logged_in:
+				user.client.send(args)
+		return ""
+
+	# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
+	# They can also shadowban.
+	# Even administrators should use these commands instead when dealing with rogue users,
+	# because they send alerts to user inboxes. (Or they will when implemented)
+	# These should be used to make users mods or admins
+	def change_permissions(self, args):
+		"""
+		Change the permissions of a particular user. Args in the format of <user> <+/-> <permission>
+		"""
+		arg_list = args.lstrip().split(' ')
+		print arg_list
+		if len(arg_list) < 3:
+			return "Too few arguments. Be sure to use the format '/ch_perm <user> <+/-> <permission>'"
+		elif arg_list[1] not in ("+", "-"):
+			return "Invalid argument. Be sure to use the format '/ch_perm <user> <+/-> <permission>'"
+		elif arg_list[2] not in dm_global.PERMS_DICT:
+			return "Invalid permissions. Use the /get_perm command to view all valid permission types."
+		else:
+			if arg_list[1] == "-":
+				return dm_global.db_conn.change_permissions_cmd(arg_list[0], -1 * dm_global.PERMS_DICT[arg_list[2]])
+			else:
+				return dm_global.db_conn.change_permissions_cmd(arg_list[0], dm_global.PERMS_DICT[arg_list[2]])
+
+	def get_permissions(self, args):
+		"""
+		Displays a list of permissions groups
+		"""
+		s = ""
+		for key in dm_global.PERMS_DICT.keys():
+			s += "%s\n"%(key)
+		return s
+	
 	#
 	# Other misc methods
 	#
@@ -401,4 +434,24 @@ class User:
 
     	def __ne__(self, other):
         	return not self.__eq__(other)
+#
+# MultilineInput - A unique class to add multiline input over telnet.
+#
 
+class MultilineInput:
+
+	def __init__(self, callback):
+		self.callback = callback
+		self.text = ""
+
+	def input(self, message):
+		"""
+		Method to add input
+		"""
+		if len(message) == 0:
+			self.text += "\n"
+		elif message == "end":
+			self.callback((self.text))
+		else:
+			self.text += str(message)
+			self.text += "\n"

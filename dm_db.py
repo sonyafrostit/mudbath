@@ -25,7 +25,15 @@ class DatabaseConnection:
 		else:
 			cursor.execute(query, params)
 		return cursor.fetchall()
-	
+	# Helpfiles stuff
+	def get_helpfiles(self):
+		query_results = self.execute_query("SELECT name, fullfile FROM helpfiles;")
+		helpfiles_dict = {}
+		for helpfile in query_results:
+			helpfiles_dict[helpfile[0]] = helpfile[1]
+		return helpfiles_dict
+		
+
 	# Account management
 	def get_user_info(self, username):
 		"""

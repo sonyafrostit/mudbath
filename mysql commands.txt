@@ -7,3 +7,5 @@ INSERT INTO accounts(account_name, password, permissions) VALUES('root', '< pass
 CREATE TABLE serverdata(salt VARCHAR[16], timeout INT);
 
 INSERT INTO serverdata(salt, timeout) VALUES ('<random string>', 0);
+
+CREATE TABLE helpfiles (name VARCHAR(32), description TEXT, PRIMARY KEY(name));
