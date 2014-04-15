@@ -325,7 +325,7 @@ class User:
 		"""
 		dm_global.db_conn.create_helpfile(self.helpfile_title, fulltext)
 		self.message_function = self.standardseq_command;
-		self.HELPFILES[helpfile_title] = fulltext
+		HELPFILES[helpfile_title] = fulltext
 		self.helpfile_title = None
 
 		self.client.send(">>")
@@ -354,7 +354,7 @@ class User:
 		elif args in self.GLOBAL_COMMANDS:
 			return self.GLOBAL_COMMANDS[args][1]
 		else:
-			return "Helpfile %s not found. Try /help on its own to see a list of helpfiles and commands" % (args)
+			return "Helpfile '%s' not found. Try /help on its own to see a list of helpfiles and commands" % (args)
 	def bye(self, args):
 		"""
 		Deactivates the client for pickup by the main server loop
