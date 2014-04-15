@@ -94,7 +94,7 @@ class User:
 		if user_data is None:
 			# Go to New Account Sequence
 			self.activate_newaccount()
-		
+			return
 		# Populate Account Data
 		# ALL variables beginning with "a_" correspond to a database column in the "accounts" table
 		self.a_account_id = user_data[0]
