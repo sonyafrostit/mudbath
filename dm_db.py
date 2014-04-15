@@ -27,10 +27,10 @@ class DatabaseConnection:
 		return cursor.fetchall()
 	# Write login and welcome banners
 	def write_login_banner(self, text):
-		self.execute_query("UPDATE serverdata SET login=&s;", [text])
+		self.execute_query("UPDATE serverdata SET login=%s;", [text])
 		self.conn.commit()
 	def write_welcome_banner(self, text):
-		self.execute_query("UPDATE serverdata SET welcome=&s;", [text])
+		self.execute_query("UPDATE serverdata SET welcome=%s;", [text])
 		self.conn.commit()
 	# Helpfiles stuff
 	def get_helpfiles(self):
