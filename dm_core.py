@@ -459,7 +459,9 @@ class MultilineInput:
 		if len(message) == 0:
 			self.text += "\n"
 		elif message == "end":
-			self.callback((self.text))
+			print self.text
+			self.callback(self.text)
 		else:
+			print self.text
 			self.text += str(message)
 			self.text += "\n"
