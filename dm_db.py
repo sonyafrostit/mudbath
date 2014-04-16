@@ -57,13 +57,19 @@ class DatabaseConnection:
 		A function that gets all the data associated with a username in the database. Used for logins
 		Precondition: The connection must be initialized
 		"""
-		query_results = self.execute_query("SELECT account_id, creation_date, display_name, password, last_visit_date, permissions FROM accounts WHERE account_name = %s", [username])
+		query_results = self.execute_query("SELECT account_id, creation_date, display_name, password, last_visit_date, permissions, silenced FROM accounts WHERE account_name = %s", [username])
 		if len(query_results) > 0:
 			return query_results[0]
 		else:
 			return None
 
-	
+	def update_user_silence(self, user):
+		self.execute_query("UPDATE accounts SET silenced = %s WHERE account_id=%s;", [user.a_silenced, user.a_account_id])
+		self.conn.commit()
+
+	def update_user_status(self, user):
+		self.execute_query("UPDATE accounts SET status = %s WHERE account_id=%s;", [user.a_status, user.a_account_id])
+		self.conn.commit()
 	def write_new_user(self, user):
 		"""
 		Takes a dm_core User object as input and writes it to the database, returning the values for autogens in a tuple.

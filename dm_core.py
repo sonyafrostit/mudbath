@@ -18,9 +18,9 @@ class User:
 		# Begin Login Sequence:
 		client.send("Username (if this is your first visit, enter in a username to sign up): ")
 		self.message_function = self.login_uname
-		self.silenced = False
+		
 		self.password_attempts = 0
-
+		self.silenced = False
 		# To prevent function calls when data has not yet been populated as necessary for preconditions
 		self.logged_in = False 
 		# functions to handle user input
@@ -74,6 +74,14 @@ class User:
 
 			'write_helpfile': (self.write_helpfile,
 				"/write_helpfile - Writes a new helpfile for users to read!",
+				dm_global.MODERATOR),
+
+			'silence': (self.silence,
+				"/silence - Silences a given user. Usage: '/silence <username>'",
+				dm_global.MODERATOR),
+
+			'unsilence': (self.unsilence,
+				"/silence - Unsilences a given user. Usage: '/unsilence <username>'",
 				dm_global.MODERATOR)
 
 		}
@@ -107,6 +115,8 @@ class User:
 		self.a_password = user_data[3]
 		self.a_last_visit_date = user_data[4]
 		self.a_permissions = user_data[5] # See how pretty and efficient this is? :D
+		self.a_silenced = user_data[6]
+		self.a_status = user_data[7]
 		# Continue Login Sequence
 		self.message_function = self.login_passwd
 		self.client.send("Password:")
@@ -162,8 +172,7 @@ class User:
 		if len(message) == 0:
 			return
 		if message.upper()[0] == 'Y': # Only check the first letter, because it covers the most cases.
-			self.message_function = self.newaccount_usernameconfirm;
-			self.client.send("You entered in username %s. Is this OK? (Yes/No)"%(self.a_account_name))
+			self.client.newaccount_username(message)
 		elif message.upper()[0] == 'N':
 			
 			self.logout()
@@ -184,7 +193,7 @@ class User:
 			self.message_function = self.newaccount_username
 			self.client.send("Enter a Username: ")
 		else:
-			self.client.send("You entered in username %s. Is this OK? (Yes/No) "%(self.a_account_name))
+			self.client.send("You entered in username '%s'. Is this OK? (Yes/No) "%(self.a_account_name))
 	def newaccount_username(self, message):
 		"""
 		Get a username. Step 3 of New Account Sequence
@@ -192,9 +201,15 @@ class User:
 		if len(message) == 0:
 			return
 		self.a_account_name = message
+		if len(self.a_account_name) > 128:
+			self.client.send("You entered username '%s', however that is too long. Please enter in a username that is less than 128 characters long: ")
+			return
+		if self.a_account_name.find(' ') > -1:
+			self.client.send("You entered username '%s', however that has spaces in it. Please enter in a username that has no spaces: ")
+			return
 		if dm_global.db_conn.check_for_username(self.a_account_name):
 			self.message_function = self.newaccount_usernameconfirm;
-			self.client.send("You entered in username %s. Is this OK? (Yes/No) "%(self.a_account_name))
+			self.client.send("You entered in username '%s'. Is this OK? (Yes/No) "%(self.a_account_name))
 		else:
 			self.message_function = self.newaccount_username
 			self.client.send("That username is already taken. Please enter a new one: ")
@@ -203,6 +218,7 @@ class User:
 		Get a password. Step 4 of New Account Sequence
 		"""
 		if len(message) == 0:
+			self.client.send("You cannot have a blank password. Please try again: ")
 			return
 		self.a_password = hashlib.sha256(message + dm_global.SALT).hexdigest()
 		self.message_function = self.newaccount_passwordconfirm;
@@ -236,7 +252,9 @@ class User:
 	#
 	# Take user input and match it with all commands
 	# Be sure to check command permissions.
-
+	def activate_standardseq(self):
+		self.message_function = self.standardseq_command
+		self.client.send("\n>>")
 	def standardseq_command(self, message):
 		if len(message) == 0:
 			return
@@ -332,9 +350,9 @@ class User:
 			return
 		self.helpfile_title = message
 		#Step 2 stuff!
-		helpfile_body = MultilineInput(self.hf_submit)
+		helpfile_body = MultilineInput(self.hf_submit, self.activate_standardseq)
 		self.message_function = helpfile_body.input
-		self.client.send("Text (type 'end' on its own line to end input):\n")
+		self.client.send("Text:\n(Type 'end' to finish or 'cancel' to cancel)\n")
 	def hf_submit(self, fulltext):
 		"""
 		Finalizes the helpfile and submits it to the database.
@@ -394,10 +412,42 @@ class User:
 			for key in dm_global.PERMS_DICT:
 				if self.has_permission(dm_global.PERMS_DICT[key]):
 					self.client.send(key + "\n")
+	def status(self, args):
+		"""
+		Changes the user's status.
+		"""
+		if args = "":
+			self.client.send(self.a_status)
+		else:
+			self.a_status = args
+			dm_global.db_conn.update_user_status(self)
 	#
 	# GLOBAL COMMANDS - commands that have to do with server-wide actions or admin level stuff
 	#
-
+	def silence(self, args):
+		"""
+		Command to shut off user access to all channels.
+		"""
+		if len(args) == 0:
+			return;
+		elif args in dm_global.USER_LIST:
+			dm_global.USER_LIST[args].a_silenced = True
+			dm_global.db_conn.update_user_silence(dm_global.USER_LIST[args])
+			return "Muted"
+		else:
+			return "That user doesn't exist!"
+	def unsilence(self, args):
+		"""
+		Command to turn on user access to channels.
+		"""
+		if len(args) == 0:
+			return;
+		elif args in dm_global.USER_LIST:
+			dm_global.USER_LIST[args].a_silenced = False
+			dm_global.db_conn.update_user_silence(dm_global.USER_LIST[args])
+			return "Unmuted"
+		else:
+			return "That user doesn't exist!"
 	def broadcast(self, args):
 		"""
 		Send msg to every client.
@@ -417,8 +467,8 @@ class User:
 		"""
 		Changes the welcome (on connect) banner
 		"""
-		self.client.send("Enter the new banner text:\n")
-		mli = MultilineInput(self.welcome_edit_write)
+		self.client.send("Enter the new banner text:\n(Type 'end' to finish or 'cancel' to cancel)\n")
+		mli = MultilineInput(self.welcome_edit_write, self.activate_standardseq)
 		self.message_function = mli.input
 
 	def welcome_edit_write(self, text):
@@ -430,8 +480,8 @@ class User:
 		"""
 		Changes the login banner
 		"""
-		self.client.send("Enter the new banner text:\n")
-		mli = MultilineInput(self.login_edit_write)
+		self.client.send("Enter the new banner text:\n(Type 'end' to finish or 'cancel' to cancel)\n")
+		mli = MultilineInput(self.login_edit_write, self.activate_standardseq)
 		self.message_function = mli.input
 	def login_edit_write(self, text):
 		dm_global.db_conn.write_login_banner(text)
@@ -442,8 +492,8 @@ class User:
 		"""
 		Changes the new user banner
 		"""
-		self.client.send("Enter the new banner text:\n")
-		mli = MultilineInput(self.newuser_edit_write)
+		self.client.send("Enter the new banner text:\n(Type 'end' to finish or 'cancel' to cancel)\n")
+		mli = MultilineInput(self.newuser_edit_write, self.activate_standardseq)
 		self.message_function = mli.input
 	def newuser_edit_write(self, text):
 		dm_global.db_conn.write_newuser_banner(text)
@@ -494,6 +544,10 @@ class User:
 		self.a_creation_date = None
 		self.a_display_name = None
 		self.a_password = None
+		self.a_last_visit_date = None
+		self.a_permissions = None # See how pretty and efficient this is? :D
+		self.a_silenced = None
+		self.a_status = None
 		# Login Message
 		self.client.send("Username (if this is your first visit, enter in a username to sign up): ")
 		self.logged_in = False # To prevent function calls when data has not yet been populated as necessary for preconditions
@@ -504,7 +558,8 @@ class User:
 		Checks to see if user is has perm_group permissions
 		"""
 		return self.a_permissions == dm_global.ROOT or self.a_permissions % (perm_group * 2) > perm_group - 1 # Oh yeah, it's that easy.
-
+	#
+	#
 	def __eq__(self, other):
         	return (isinstance(other, self.__class__)
             	and self.client == other.client) # Users are the same if their clients are the same.
@@ -517,10 +572,13 @@ class User:
 #
 
 class MultilineInput:
-
-	def __init__(self, callback):
+	#
+	# Takes two function names as input. The function to call with the full data, and a function to call when quitting
+	#
+	def __init__(self, callback, cancel):
 		self.callback = callback
 		self.text = ""
+		self.cancel = cancel
 
 	def input(self, message):
 		"""
@@ -530,6 +588,7 @@ class MultilineInput:
 			self.text += "\n"
 		elif message == "end":
 			self.callback(self.text)
+		elif message == "cancel"
 		else:
 			self.text += str(message)
 			self.text += "\n"

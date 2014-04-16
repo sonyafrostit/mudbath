@@ -1,4 +1,4 @@
-import dm_db
+import dm_db, dm_conn
 
 # Database Connection
 db_conn = dm_db.DatabaseConnection(username='mudbath', password='St1ll@l1v3!', database='mudbath')
