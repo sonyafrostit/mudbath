@@ -1,2 +1,3 @@
 class Exchange:
-	send_message()
+	send_message(self):
+		pass
