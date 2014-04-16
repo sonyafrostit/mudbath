@@ -1,3 +1,3 @@
 class Exchange:
-	send_message(self):
+	def send_message(self):
 		pass
