@@ -592,7 +592,8 @@ class MultilineInput:
 			self.text += "\n"
 		elif message == "end":
 			self.callback(self.text)
-		elif message == "cancel"
+		elif message == "cancel":
+			self.cancel()
 		else:
 			self.text += str(message)
 			self.text += "\n"
