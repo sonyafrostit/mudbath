@@ -41,6 +41,10 @@ class User:
 
 			'perms': (self.perms,
 				"/perms - Shows you what your permissions are",
+				dm_global.USER),
+
+			'status': (self.status,
+				"/status - Displays your current status (if sent without arguments) or changes your status (if sent with arguments)",
 				dm_global.USER)
 
 		}
@@ -416,7 +420,7 @@ class User:
 		"""
 		Changes the user's status.
 		"""
-		if args = "":
+		if args == "":
 			self.client.send(self.a_status)
 		else:
 			self.a_status = args
