@@ -273,7 +273,7 @@ class User:
 			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
 		elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
 			self.client.send(self.USER_COMMANDS[command][0](args))
-		else:	
+		else:
 			self.client.send("Command/Channel either does not exist or you do not have permission to do that. Try '/help' if you're lost!\n")
 			# We don't show if you don't have permissions or if its a typo. We just remove all access.
 
