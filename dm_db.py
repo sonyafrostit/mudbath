@@ -57,7 +57,7 @@ class DatabaseConnection:
 		A function that gets all the data associated with a username in the database. Used for logins
 		Precondition: The connection must be initialized
 		"""
-		query_results = self.execute_query("SELECT account_id, creation_date, display_name, password, last_visit_date, permissions, silenced FROM accounts WHERE account_name = %s", [username])
+		query_results = self.execute_query("SELECT account_id, creation_date, display_name, password, last_visit_date, permissions, silenced, status FROM accounts WHERE account_name = %s", [username])
 		if len(query_results) > 0:
 			return query_results[0]
 		else:
