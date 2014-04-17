@@ -28,23 +28,23 @@ class User:
 		self.USER_COMMANDS = {
 
 			'bye': (self.bye,
-				"/bye - Logs out and exits the server",
+				"$bye - Logs out and exits the server",
 				dm_global.USER),
 
 			'help': (self.help,
-				"/help - Shows helpful information!",
+				"$help - Shows helpful information!",
 				dm_global.USER),
 
 			'passwd': (self.passwd,
-				"/passwd - Changes password",
+				"$passwd - Changes password",
 				dm_global.USER),
 
 			'perms': (self.perms,
-				"/perms - Shows you what your permissions are",
+				"$perms - Shows you what your permissions are",
 				dm_global.USER),
 
 			'status': (self.status,
-				"/status - Displays your current status (if sent without arguments) or changes your status (if sent with arguments)",
+				"$status - Displays your current status (if sent without arguments) or changes your status (if sent with arguments)",
 				dm_global.USER)
 
 		}
@@ -53,39 +53,39 @@ class User:
 		self.GLOBAL_COMMANDS = {
 
 			'welcome_edit': (self.welcome_edit,
-				"/welcome_edit - Changes the welcome banner which displays on connect",
+				"$welcome_edit - Changes the welcome banner which displays on connect",
 				dm_global.ADMIN),
 
 			'login_edit': (self.login_edit,
-				"/login_edit - Changes the login banner which displays on login",
+				"$login_edit - Changes the login banner which displays on login",
 				dm_global.ADMIN),
 
 			'newuser_edit': (self.newuser_edit,
-				"/newuser_edit - Changes the banner which displays on creation of a new account",
+				"$newuser_edit - Changes the banner which displays on creation of a new account",
 				dm_global.ADMIN),
 
 			'broadcast': (self.broadcast,
-				"/broadcast - Broadcasts a message",
+				"$broadcast - Broadcasts a message",
 				dm_global.ADMIN),
 
 			'ch_perm': (self.change_permissions,
-				"/ch_perm - Changes the permissions for a particular user. Format: '/ch_perm <user> <+/-> <permission>'",
+				"$ch_perm - Changes the permissions for a particular user. Format: '$ch_perm <user> <+$-> <permission>'",
 				dm_global.ADMIN),
 
 			'get_perm': (self.get_permissions,
-				"/get_perm - Displays a list of possible permissions",
+				"$get_perm - Displays a list of possible permissions",
 				dm_global.ADMIN),
 
 			'write_helpfile': (self.write_helpfile,
-				"/write_helpfile - Writes a new helpfile for users to read!",
+				"$write_helpfile - Writes a new helpfile for users to read!",
 				dm_global.MODERATOR),
 
 			'silence': (self.silence,
-				"/silence - Silences a given user. Usage: '/silence <username>'",
+				"$silence - Silences a given user. Usage: '$silence <username>'",
 				dm_global.MODERATOR),
 
 			'unsilence': (self.unsilence,
-				"/silence - Unsilences a given user. Usage: '/unsilence <username>'",
+				"$silence - Unsilences a given user. Usage: '$unsilence <username>'",
 				dm_global.MODERATOR)
 
 		}
@@ -262,7 +262,7 @@ class User:
 	def standardseq_command(self, message):
 		if len(message) == 0:
 			return
-		if message[0] == '/':
+		if message[0] == '$':
 			command = ""
 			if len(message) == 1:
 				return
@@ -385,7 +385,7 @@ class User:
 			for command in self.USER_COMMANDS:
 				if self.has_permission(self.USER_COMMANDS[command][2]):
 					helpstring += self.USER_COMMANDS[command][1] + '\n'
-			helpstring += "\n\nList of help files. To read, type in the '/help' command, followed by the name of the file.\nExample: '/help About' reads the 'About' file.:\n\n"
+			helpstring += "\n\nList of help files. To read, type in the '$help' command, followed by the name of the file.\nExample: '$help About' reads the 'About' file.:\n\n"
 			for hfile in HELPFILES:
 				helpstring += hfile
 			helpstring += "\n"
@@ -395,7 +395,7 @@ class User:
 		elif args in self.GLOBAL_COMMANDS:
 			return self.GLOBAL_COMMANDS[args][1]
 		else:
-			return "Helpfile '%s' not found. Try /help on its own to see a list of helpfiles and commands" % (args)
+			return "Helpfile '%s' not found. Try $help on its own to see a list of helpfiles and commands" % (args)
 	def bye(self, args):
 		"""
 		Deactivates the client for pickup by the main server loop
@@ -515,11 +515,11 @@ class User:
 		"""
 		arg_list = args.lstrip().split(' ')
 		if len(arg_list) < 3:
-			return "Too few arguments. Be sure to use the format '/ch_perm <user> <+/-> <permission>'"
+			return "Too few arguments. Be sure to use the format '$ch_perm <user> <+/-> <permission>'"
 		elif arg_list[1] not in ("+", "-"):
-			return "Invalid argument. Be sure to use the format '/ch_perm <user> <+/-> <permission>'"
+			return "Invalid argument. Be sure to use the format '$ch_perm <user> <+/-> <permission>'"
 		elif arg_list[2] not in dm_global.PERMS_DICT:
-			return "Invalid permissions. Use the /get_perm command to view all valid permission types."
+			return "Invalid permissions. Use the $get_perm command to view all valid permission types."
 		else:
 			if arg_list[1] == "-":
 				return dm_global.db_conn.change_permissions_cmd(arg_list[0], -1 * dm_global.PERMS_DICT[arg_list[2]])
