@@ -263,11 +263,11 @@ class User:
 		if len(message) == 0:
 			return
 		if message.find(' ') > -1:
-				command = message[:message.find(' ')]
-				args = message[message.find(' ') + 1:]
-			else:
-				command = message
-				args = ""
+			command = message[:message.find(' ')]
+			args = message[message.find(' ') + 1:]
+		else:
+			command = message
+			args = ""
 			
 		if command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
 			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
