@@ -269,9 +269,9 @@ class User:
 			args = ""
 			
 		if command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
-			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
+			self.client.send(self.GLOBAL_COMMANDS[command][0](args) + dm_ansi.CLEAR)
 		elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
-			self.client.send(self.USER_COMMANDS[command][0](args))
+			self.client.send(self.USER_COMMANDS[command][0](args) + dm_ansi.CLEAR)
 		else:
 			self.client.send("Command/Channel either does not exist or you do not have permission to do that. Try '/help' if you're lost!\n")
 			# We don't show if you don't have permissions or if its a typo. We just remove all access.
@@ -375,7 +375,7 @@ class User:
 			for command in self.USER_COMMANDS:
 				if self.has_permission(self.USER_COMMANDS[command][2]):
 					helpstring += self.USER_COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
-			helpstring += "\n\nList of help files. To read, type in the 'help' command, followed by the name of the file.\nExample: 'help About' reads the 'About' file.:\n\n"
+			helpstring += "\n\nList of help files. To read, type in the 'help' command, followed by the name of the file.\nExample: 'help About' reads the 'About' file.:\n\n%s" % (dm_ansi.YELLOW)
 			for hfile in HELPFILES:
 				helpstring += hfile
 			helpstring += "\n"
@@ -383,7 +383,7 @@ class User:
 		elif args in HELPFILES:
 			return HELPFILES[args]
 		elif args in self.GLOBAL_COMMANDS:
-			return self.GLOBAL_COMMANDS[args][1]
+			return self.GLOBAL_COMMANDS[args][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
 		else:
 			return "Helpfile '%s' not found. Try help on its own to see a list of helpfiles and commands" % (args)
 	def bye(self, args):
