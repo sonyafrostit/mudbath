@@ -1,4 +1,4 @@
-import hashlib, datetime, dm_global
+import hashlib, datetime, dm_global, dm_ansi
 
 #
 # HELPFILES - A way to create some helpfiles for the benefit of users! Hopefully they'll read 'em....hopefully
@@ -28,23 +28,23 @@ class User:
 		self.USER_COMMANDS = {
 
 			'bye': (self.bye,
-				"bye - Logs out and exits the server",
+				"%sbye%s - Logs out and exits the server%s",
 				dm_global.USER),
 
 			'help': (self.help,
-				"help - Shows helpful information!",
+				"%shelp%s - Shows helpful information!%s",
 				dm_global.USER),
 
 			'passwd': (self.passwd,
-				"passwd - Changes password",
+				"%spasswd%s - Changes password%s",
 				dm_global.USER),
 
 			'perms': (self.perms,
-				"perms - Shows you what your permissions are",
+				"%sperms%s - Shows you what your permissions are%s",
 				dm_global.USER),
 
 			'status': (self.status,
-				"status - Displays your current status (if sent without arguments) or changes your status (if sent with arguments)",
+				"%sstatus%s - Displays your current status (if sent without arguments) or changes your status (if sent with arguments)%s",
 				dm_global.USER)
 
 		}
@@ -53,39 +53,39 @@ class User:
 		self.GLOBAL_COMMANDS = {
 
 			'welcome_edit': (self.welcome_edit,
-				"welcome_edit - Changes the welcome banner which displays on connect",
+				"%swelcome_edit%s - Changes the welcome banner which displays on connect%s",
 				dm_global.ADMIN),
 
 			'login_edit': (self.login_edit,
-				"login_edit - Changes the login banner which displays on login",
+				"%slogin_edit%s - Changes the login banner which displays on login%s",
 				dm_global.ADMIN),
 
 			'newuser_edit': (self.newuser_edit,
-				"newuser_edit - Changes the banner which displays on creation of a new account",
+				"%snewuser_edit%s - Changes the banner which displays on creation of a new account%s",
 				dm_global.ADMIN),
 
 			'broadcast': (self.broadcast,
-				"broadcast - Broadcasts a message",
+				"%sbroadcast%s - Broadcasts a message%s",
 				dm_global.ADMIN),
 
 			'ch_perm': (self.change_permissions,
-				"ch_perm - Changes the permissions for a particular user. Format: 'ch_perm <user> <+/-> <permission>'",
+				"%sch_perm%s - Changes the permissions for a particular user. Format: 'ch_perm <user> <+/-> <permission>'%s",
 				dm_global.ADMIN),
 
 			'get_perm': (self.get_permissions,
-				"get_perm - Displays a list of possible permissions",
+				"%sget_perm%s - Displays a list of possible permissions%s",
 				dm_global.ADMIN),
 
 			'write_helpfile': (self.write_helpfile,
-				"write_helpfile - Writes a new helpfile for users to read!",
+				"%swrite_helpfile%s - Writes a new helpfile for users to read!%s",
 				dm_global.MODERATOR),
 
 			'silence': (self.silence,
-				"silence - Silences a given user. Usage: 'silence <username>'",
+				"%ssilence%s - Silences a given user. Usage: 'silence <username>'%s",
 				dm_global.MODERATOR),
 
 			'unsilence': (self.unsilence,
-				"silence - Unsilences a given user. Usage: 'unsilence <username>'",
+				"%ssilence%s - Unsilences a given user. Usage: 'unsilence <username>'%s",
 				dm_global.MODERATOR)
 
 		}
@@ -142,7 +142,6 @@ class User:
 			dm_global.db_conn.update_login_date(self.a_account_id)
 			self.message_function = self.standardseq_command
 			self.password_attempts = 0
-			self.client.send("\n>>")
 		else:
 			if self.password_attempts == 5:
 				self.client.send("Too many attempts. Disconnecting.")
@@ -359,8 +358,6 @@ class User:
 		self.message_function = self.standardseq_command;
 		HELPFILES[self.helpfile_title] = fulltext
 		self.helpfile_title = None
-
-		self.client.send(">>")
 	# USER COMMANDS
 	#
 	# These are for use by everyone. They're even left on for people who are banned,
@@ -374,10 +371,10 @@ class User:
 			helpstring = "List of Commands: \n\n"
 			for command in self.GLOBAL_COMMANDS:
 				if self.has_permission(self.GLOBAL_COMMANDS[command][2]):
-					helpstring += self.GLOBAL_COMMANDS[command][1] + '\n'
+					helpstring += self.GLOBAL_COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
 			for command in self.USER_COMMANDS:
 				if self.has_permission(self.USER_COMMANDS[command][2]):
-					helpstring += self.USER_COMMANDS[command][1] + '\n'
+					helpstring += self.USER_COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
 			helpstring += "\n\nList of help files. To read, type in the 'help' command, followed by the name of the file.\nExample: 'help About' reads the 'About' file.:\n\n"
 			for hfile in HELPFILES:
 				helpstring += hfile
@@ -472,7 +469,6 @@ class User:
 		dm_global.db_conn.write_welcome_banner(text)
 		self.message_function = self.standardseq_command
 		dm_global.WELCOME_MESSAGE = text
-		self.client.send(">>")
 	def login_edit(self, args):
 		"""
 		Changes the login banner
@@ -484,7 +480,6 @@ class User:
 		dm_global.db_conn.write_login_banner(text)
 		self.message_function = self.standardseq_command
 		dm_global.LOGIN_MESSAGE = text
-		self.client.send(">>")
 	def newuser_edit(self, args):
 		"""
 		Changes the new user banner
@@ -496,7 +491,6 @@ class User:
 		dm_global.db_conn.write_newuser_banner(text)
 		self.message_function = self.standardseq_command
 		dm_global.NEW_USER_MESSAGE = text
-		self.client.send(">>")
 	# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
 	# They can also shadowban.
 	# Even administrators should use these commands instead when dealing with rogue users,
