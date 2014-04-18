@@ -14,7 +14,7 @@ class Channel:
 		"""
 		if user in self.users:
 			self.users.remove(user)
-			self.broadcast("%sUser %s disconnected%s from %s" % (dm_ansi.RED, account_name, self.name, dm_ansi.CLEAR)
+			self.broadcast("%sUser %s disconnected%s from %s" % (dm_ansi.RED, account_name, self.name, dm_ansi.CLEAR))
 			return (True, "User successfully disconnected from channel")
 		else:
 			return (False, "User not connected to channel"
