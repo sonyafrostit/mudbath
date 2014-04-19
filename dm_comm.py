@@ -105,7 +105,7 @@ class Mailbox:
 		self.handle = handle
 		self.user = users
 		self.blocked = blocked
-		MAILBOX[handle] = self
+		MAILBOXES[handle] = self
 	def recieve_message(self, message, originbox):
 		for user in self.users:
 			if user.a_account_name == originbox:
