@@ -3,6 +3,11 @@ import dm_global, dm_ansi, datetime
 MAILBOXES = {}
 CHANNELS = {}
 
+channels_d = dm_global.db_conn.execute_query("SELECT name, topic, active FROM channels;")
+
+for channel_data in channels_d:
+	CHANNELS[channel_data[0]] = Channel(channel_data[0], channel_data[1], channel_data[2])
+
 class Channel:
 	def __init__(self, name, active=True, private=False):
 		self.name = name
@@ -72,6 +77,8 @@ class Channel:
 		else:
 			self.banned_users.append(user)
 			return "User added to banlist"
+	def format_message(self, message, user):
+		return "%s(%s)%s[%s]%s%s:%s %s" % (dm_ansi.BGREEN + dm_ansi.BOLD + dm_ansi.WHITE, self.name, dm_ansi.CLEAR + dm_ansi.YELLOW + dm_ansi.BOLD, user.a_account_name, dm_ansi.CLEAR, message + "\n")
 	def msg(self, message, user):
 		"""
 		Called when a user sends a message
@@ -85,19 +92,21 @@ class Channel:
 		elif user.silenced:
 			return "You have been silenced. Please contact an admin."
 		else:
+			self.broadcast(format_message(message, user))
 			return ""
 #
 # Mailbox class to handle pm's
 #
 class Mailbox:
-	def __init__(self, handle, users=[]):
+	def __init__(self, handle, users=[], blocked=[]):
 		self.handle = handles
 		self.user = users
+		self.blocked = blocked
 		MAILBOX[handle] = self
 	def recieve_message(self, message, originbox):
 		for user in self.users:
 			if user.a_account_name:
-				user.client.send("%s[%s]%s@%s:%s %s" % [dm_ansi.BOLD + dm_ansi.WHITE, datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"])
+				user.client.send("%s[%s]%s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n")
 			else:
-				user.client.send("%s(@%s)%s[%s]%s@%s:%s %s" % [dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"])
+				user.client.send("%s(@%s)%s[%s]%s@%s:%s %s" % (dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n")
 

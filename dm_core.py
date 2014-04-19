@@ -97,6 +97,7 @@ class User:
 				dm_global.ADMIN)
 
 		}
+		
 	# LOGIN SEQUENCE
 	#
 	# 1. Get Username input from user and look up in database.
