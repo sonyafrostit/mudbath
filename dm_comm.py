@@ -107,6 +107,7 @@ class Mailbox:
 		self.blocked = blocked
 		MAILBOXES[handle] = self
 	def recieve_message(self, message, originbox):
+		dm_global.db_conn.log_message(originbox.handle, self.handle, message)
 		for user in self.users:
 			if user.a_account_name == self.handle:
 				user.client.send("%s[%s] %s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox.handle, dm_ansi.CLEAR, message + "\n"))

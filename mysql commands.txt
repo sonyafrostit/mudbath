@@ -11,3 +11,5 @@ INSERT INTO serverdata(salt, timeout) VALUES ('<randomstring>', 0, '', '', '');
 CREATE TABLE helpfiles (title VARCHAR(32), fullfile TEXT, PRIMARY KEY(name));
 
 CREATE TABLE channels (name VARCHAR(128) NOT NULL, topic TEXT, active BOOLEAN, PRIMARY KEY (name));
+
+CREATE TABLE messages (message_id INT AUTO_INCREMENT NOT NULL, sender VARCHAR(128), recipient VARCHAR(128), message TEXT, sendingdatetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (message_id));

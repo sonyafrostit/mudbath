@@ -124,6 +124,9 @@ class DatabaseConnection:
 					return "Added Permissions"
 		else:
 			return "That user doesn't exist!"
+	def log_message(self, sender, recipient, mesage):
+		self.execute_query("INSERT INTO messages (sender, recipient, message) VALUES (%s, %s, %s);")
+		self.conn.commit()
 
 
 	# Channels data
