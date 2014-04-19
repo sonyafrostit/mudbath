@@ -81,7 +81,7 @@ class Channel:
 			self.banned_users.append(user)
 			return "User added to banlist"
 	def format_message(self, message, user):
-		return "%s(%s)%s[%s]%s%s:%s %s" % (dm_ansi.BGREEN + dm_ansi.BOLD + dm_ansi.WHITE, self.name, dm_ansi.CLEAR + dm_ansi.YELLOW + dm_ansi.BOLD, user.a_account_name, dm_ansi.CLEAR, message + "\n")
+		return "%s(%s)%s[%s]%s%s:%s %s" % (dm_ansi.BGREEN + dm_ansi.BOLD + dm_ansi.WHITE, self.name, dm_ansi.CLEAR, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW + dm_ansi.BOLD, user.a_account_name, dm_ansi.CLEAR, message + "\n")
 	def msg(self, message, user):
 		"""
 		Called when a user sends a message
@@ -109,6 +109,6 @@ class Mailbox:
 	def recieve_message(self, message, originbox):
 		for user in self.users:
 			if user.a_account_name == originbox:
-				user.client.send("%s[%s]%s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.time.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
+				user.client.send("%s[%s]%s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
 			else:
-				user.client.send("%s(@%s)%s[%s]%s@%s:%s %s" % (dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.time.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
+				user.client.send("%s(@%s)%s[%s]%s@%s:%s %s" % (dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
