@@ -416,15 +416,6 @@ class User:
 			for key in dm_global.PERMS_DICT:
 				if self.has_permission(dm_global.PERMS_DICT[key]):
 					self.client.send(key + "\n")
-	def status(self, args):
-		"""
-		Changes the user's status.
-		"""
-		if args == "":
-			self.client.send(self.a_status)
-		else:
-			self.a_status = args
-			dm_global.db_conn.update_user_status(self)
 	#
 	# GLOBAL COMMANDS - commands that have to do with server-wide actions or admin level stuff
 	#
@@ -511,8 +502,10 @@ class User:
 			if len(args) > 128:
 				self.client.send("Channel name too long. Must be < 128 characters\n")
 				return
+			if args in self.GLOBAL_COMMANDS or args in self.USER_COMMANDS:
+				self.client.send("Channel name cannot conflict with an existing command\n")
 			for channel in dm_global.CHANNELS:
-				if channel.args == args:
+				if channel.name == args:
 					self.client.send("Channel already exists with that name\n")
 					return
 			dm_global.CHANNELS.append(dm_comm.Channel(args))
