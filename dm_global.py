@@ -20,9 +20,7 @@ LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")[0][0]
 
 NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0]
 
-# Connection Stuff
-
-CHANNELS=[]
+dm_comm.load_channels()
 
 # Permission Groups
 #
@@ -59,7 +57,4 @@ DEFAULT_PERMISSIONS = USER + CHANNEL
 
 # Load channels
 
-channels_d = db_conn.execute_query("SELECT name, topic, active FROM channels;")
 
-for channel_data in channels_d:
-	CHANNELS.append(Channel(channel_data[0], channel_data[1], channel_data[2]))

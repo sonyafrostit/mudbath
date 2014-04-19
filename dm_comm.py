@@ -3,10 +3,13 @@ import dm_global, dm_ansi, datetime
 MAILBOXES = {}
 CHANNELS = {}
 
-channels_d = dm_global.db_conn.execute_query("SELECT name, topic, active FROM channels;")
 
-for channel_data in channels_d:
-	CHANNELS[channel_data[0]] = Channel(channel_data[0], channel_data[1], channel_data[2])
+def load_channels():
+	channels_d = dm_global.db_conn.execute_query("SELECT name, topic, active FROM channels;")
+
+	for channel_data in channels_d:
+		CHANNELS[channel_data[0]] = Channel(channel_data[0], channel_data[1], channel_data[2])
+
 
 class Channel:
 	def __init__(self, name, active=True, private=False):
