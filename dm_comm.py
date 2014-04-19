@@ -33,7 +33,7 @@ class Channel:
 		if user in self.hushed_users:
 			return "User already hushed"
 		else:
-			self.hushed_users.add(user)
+			self.hushed_users.append(user)
 			return "User hushed"
 	def plug(self, user):
 		"""
@@ -44,7 +44,7 @@ class Channel:
 		elif user in self.users:
 			return "User already in channel"
 		else:
-			self.users.add(user)
+			self.users.append(user)
 			return "User added to channel"
 			
 	def gag(self, user):
@@ -54,7 +54,7 @@ class Channel:
 		if user in self.gagged_users:
 			return "User is already gagged!"
 		else:
-			self.gagged_users.add(user)
+			self.gagged_users.append(user)
 			return "Gagged"
 
 	def ban(self, user):
@@ -66,7 +66,7 @@ class Channel:
 		if user in self.banned_users:
 			return "User already banned"
 		else:
-			self.banned_users.add(user)
+			self.banned_users.append(user)
 			return "User added to banlist"
 	def msg(self, message, user):
 		"""

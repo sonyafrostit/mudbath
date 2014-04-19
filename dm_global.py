@@ -62,5 +62,4 @@ DEFAULT_PERMISSIONS = USER + CHANNEL
 channels_d = db_conn.execute_query("SELECT name, topic, active FROM channels;")
 
 for channel_data in channels_d:
-	CHANNELS.add(Channel(channel_data[0], channel_data[1], channel_data[2]))
-	
+	CHANNELS.append(Channel(channel_data[0], channel_data[1], channel_data[2]))
