@@ -511,7 +511,7 @@ class User:
 				if channel.args == args:
 					self.client.send("Channel already exists with that name\n")
 					return
-			dm_global.CHANNELS.add(dm_comm.Channel(args))
+			dm_global.CHANNELS.append(dm_comm.Channel(args))
 			dm_global.db_conn.create_channel(args)
 			self.client.send("Channel '%s%s%s' created\n" % (dm_ansi.CYAN, args, dm_ansi.CLEAR))
 			return
