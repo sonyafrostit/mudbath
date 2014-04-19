@@ -1,7 +1,7 @@
 import dm_global, dm_ansi
 
 class Channel:
-	def __init__(self, name, topic=""):
+	def __init__(self, name, topic="", active=True):
 		self.name = name
 		self.topic = topic
 		self.users = []
@@ -15,42 +15,47 @@ class Channel:
 		if user in self.users:
 			self.users.remove(user)
 			self.broadcast("%sUser %s disconnected%s from %s" % (dm_ansi.RED, account_name, self.name, dm_ansi.CLEAR))
-			return (True, "User successfully disconnected from channel")
+			return "User successfully disconnected from channel"
 		else:
-			return (False, "User not connected to channel"
-	def broadcast(self, message):
+			return "User not connected to channel"
+	def broadcast(self, message, exceptions=[]):
 		"""
 		Send a message to everyone!
 		"""
-		for user in self.users:
+		for user in self.users not in :
 			user.client.send(message)
-		return (True, "Message broadcast successfully")
+		return "Message broadcast successfully"
 	def hush(self, user):
 		"""
 		Hush user so they can still see messages but not send them. 
 		"""
 		if user in self.hushed_users:
-			return (False, "User already hushed")
+			return "User already hushed"
 		else:
 			self.hushed_users.add(user)
-			return (True, "User hushed")
-	def plug_user(self, user):
+			return "User hushed"
+	def plug(self, user):
 		"""
 		Plug a user into the channel
 		"""
 		if user in self.banned_users:
-			return (False, "User is banned")
+			return "User is banned"
 		elif user in self.users:
-			return (False, "User already in channel")
+			return "User already in channel"
 		else:
 			self.users.add(user)
-			return (False, "User added to channel")
+			return "User added to channel"
 			
 	def gag(self, user):
 		"""
 		Gag is like shadowban
 		"""
-		self.gagged_users.add(user)
+		if user in self.gagged_users:
+			return "User is already gagged!"
+		else:
+			self.gagged_users.add(user)
+			return "Gagged"
+
 	def ban(self, user):
 		"""
 		BAN HAMMER!
@@ -58,21 +63,20 @@ class Channel:
 		if user in users:
 			self.unplug_user(user)
 		if user in self.banned_users:
-			return (False, "User already banned")
+			return "User already banned"
 		else:
 			self.banned_users.add(user)
-			(True, "User added to banlist")
+			return "User added to banlist"
 	def msg(self, message, user):
 		"""
 		Called when a user sends a message
 		"""
 		if user not in users:
-			return (False, "You're not connected to that channel!")
+			return "You're not connected to that channel!"
 		elif user in hushed_users:
-			return (False, "You're not able to send messages to that channel!")
+			return "You're not able to send messages to that channel!"
 		elif user in gagged_users:
-			return (False, self.format_message(message, user)) # Gagged user can't see that they're banned.
+			return self.format_message(message, user) # Gagged user can't see that they're banned.
 		else:
-			self.broadcast(self.format_message(message, user))
-			return (True, "")
+			return ""
 

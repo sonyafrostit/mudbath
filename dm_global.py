@@ -1,4 +1,4 @@
-import dm_db
+import dm_db, dm_comm
 
 # Database Connection
 db_conn = dm_db.DatabaseConnection(username='mudbath', password='St1ll@l1v3!', database='mudbath')
@@ -19,6 +19,11 @@ WELCOME_MESSAGE = db_conn.execute_query("SELECT welcome FROM serverdata;")[0][0]
 LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")[0][0]
 
 NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0]
+
+# Connection Stuff
+
+CHANNELS=[]
+
 # Permission Groups
 #
 # How it works: Addition and subtraction. If you want to add a person to a group, add the group to their a_permissions. As in, a_permissions += group. Subtract for taking away permissions.
@@ -51,3 +56,11 @@ PERMS_DICT = {
 }
 
 DEFAULT_PERMISSIONS = USER + CHANNEL
+
+# Load channels
+
+channels_d = db_conn.execute_query("SELECT name, topic, active FROM channels;")
+
+for channel_data in channels_d:
+	CHANNELS.add(Channel(channel_data[0], channel_data[1], channel_data[2]))
+	

@@ -9,3 +9,5 @@ CREATE TABLE serverdata(salt VARCHAR[16], timeout INT, welcome TEXT, login TEXT,
 INSERT INTO serverdata(salt, timeout) VALUES ('<randomstring>', 0, '', '', '');
 
 CREATE TABLE helpfiles (title VARCHAR(32), fullfile TEXT, PRIMARY KEY(name));
+
+CREATE TABLE channels (name VARCHAR(128) NOT NULL, topic TEXT, active BOOLEAN, PRIMARY KEY (name));
