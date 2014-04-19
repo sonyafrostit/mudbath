@@ -129,7 +129,7 @@ class DatabaseConnection:
 	# Channels data
 
 	def create_channel(self, name):
-		self.execute_query("INSERT INTO channels (name, active) VALUES (%s, true);", [c_name])
+		self.execute_query("INSERT INTO channels (name, active) VALUES (%s, true);", [name])
 		self.conn.commit()
 
 
