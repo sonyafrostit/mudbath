@@ -128,8 +128,8 @@ class DatabaseConnection:
 
 	# Channels data
 
-	def create_channel(self, c_name, owner_co_account_id):
+	def create_channel(self, name):
 		self.execute_query("INSERT INTO channels (name, active) VALUES (%s, true);", [c_name])
 		self.conn.commit()
-		self.execute_query("INSERT INTO channel_connections (account_id, conn_role, active, channel_id) VALUES ( %s, 0, true, %s);", [owner_co_account_id, self.conn.insert_id()])
-		self.conn.commit()
+
+
