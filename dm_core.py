@@ -43,10 +43,6 @@ class User:
 				"%sperms%s - Shows you what your permissions are%s",
 				dm_global.USER),
 
-			'status': (self.status,
-				"%sstatus%s - Displays your current status (if sent without arguments) or changes your status (if sent with arguments)%s",
-				dm_global.USER)
-
 		}
 		# Global commands dictionary
 
@@ -97,7 +93,7 @@ class User:
 				dm_global.ADMIN)
 
 		}
-		
+
 	# LOGIN SEQUENCE
 	#
 	# 1. Get Username input from user and look up in database.
