@@ -22,8 +22,9 @@ class Channel:
 		"""
 		Send a message to everyone!
 		"""
-		for user in self.users not in :
-			user.client.send(message)
+		for user in self.users:
+			if user not in exceptions:
+				user.client.send(message)
 		return "Message broadcast successfully"
 	def hush(self, user):
 		"""
@@ -77,6 +78,8 @@ class Channel:
 			return "You're not able to send messages to that channel!"
 		elif user in gagged_users:
 			return self.format_message(message, user) # Gagged user can't see that they're banned.
+		elif user.silenced:
+			return "You have been silenced. Please contact an admin."
 		else:
 			return ""
 
