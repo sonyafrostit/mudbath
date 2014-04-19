@@ -1,4 +1,5 @@
-import dm_global, dm_ansi, datetime
+import dm_global, dm_ansi
+import datetime from datetime
 
 MAILBOXES = {}
 CHANNELS = {}
