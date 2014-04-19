@@ -5,7 +5,7 @@ CHANNELS = {}
 
 
 def load_channels():
-	channels_d = dm_global.db_conn.execute_query("SELECT name, topic, active FROM channels;")
+	channels_d = dm_global.db_conn.execute_query("SELECT name, active, private FROM channels;")
 
 	for channel_data in channels_d:
 		CHANNELS[channel_data[0]] = Channel(channel_data[0], channel_data[1], channel_data[2])
