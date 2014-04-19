@@ -1,5 +1,4 @@
-import dm_global, dm_ansi
-import datetime from datetime
+import dm_global, dm_ansi, datetime
 
 MAILBOXES = {}
 CHANNELS = {}
@@ -110,6 +109,6 @@ class Mailbox:
 	def recieve_message(self, message, originbox):
 		for user in self.users:
 			if user.a_account_name == originbox:
-				user.client.send("%s[%s]%s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
+				user.client.send("%s[%s]%s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.time.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
 			else:
-				user.client.send("%s(@%s)%s[%s]%s@%s:%s %s" % (dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
+				user.client.send("%s(@%s)%s[%s]%s@%s:%s %s" % (dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.time.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
