@@ -273,10 +273,10 @@ class User:
 		else:
 			command = message
 			args = ""
-		if command[0] = '@':
+		if command[0] == '@':
 			if not self.sileced and command[1:] in dm_comm.MAILBOXES:
 				dm_comm.MAILBOXES[command[1:]].recieve_message(args)
-		if command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
+		elif command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
 			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
 		elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
