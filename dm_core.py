@@ -13,6 +13,7 @@ class User:
 
 
 	def __init__(self, client):
+		
 		self.client = client # Our TCP/Telnet Client
 		self.client.send(dm_global.WELCOME_MESSAGE + "\n")
 		# Begin Login Sequence:
@@ -125,6 +126,8 @@ class User:
 		self.a_last_visit_date = user_data[4]
 		self.a_permissions = user_data[5] # See how pretty and efficient this is? :D
 		self.a_silenced = user_data[6]
+		self.mailbox = dm_comm.Mailbox(self.a_account_name, [self], [])
+
 		# Continue Login Sequence
 		self.message_function = self.login_passwd
 		self.client.send("Password:")
@@ -261,7 +264,6 @@ class User:
 	# Be sure to check command permissions.
 	def activate_standardseq(self):
 		self.message_function = self.standardseq_command
-		self.client.send("\n>>")
 	def standardseq_command(self, message):
 		if len(message) == 0:
 			return
@@ -271,7 +273,9 @@ class User:
 		else:
 			command = message
 			args = ""
-			
+		if command[0] = '@':
+			if not self.sileced and command[1:] in dm_comm.MAILBOXES:
+				dm_comm.MAILBOXES[command[1:]].recieve_message(args)
 		if command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
 			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
@@ -500,10 +504,9 @@ class User:
 				return
 			if args in self.GLOBAL_COMMANDS or args in self.USER_COMMANDS:
 				self.client.send("Channel name cannot conflict with an existing command\n")
-			for channel in dm_global.CHANNELS:
-				if channel.name == args:
-					self.client.send("Channel already exists with that name\n")
-					return
+			if channel in dm_comm.CHANNELS:
+				self.client.send("Channel already exists with that name\n")
+				return
 			dm_global.CHANNELS.append(dm_comm.Channel(args))
 			dm_global.db_conn.create_channel(args)
 			self.client.send("Channel '%s%s%s' created\n" % (dm_ansi.CYAN, args, dm_ansi.CLEAR))
@@ -560,7 +563,7 @@ class User:
 		self.a_last_visit_date = None
 		self.a_permissions = None # See how pretty and efficient this is? :D
 		self.a_silenced = None
-		self.a_status = None
+		self.mailbox = None
 		# Login Message
 		self.client.send("Username (if this is your first visit, enter in a username to sign up): ")
 		self.logged_in = False # To prevent function calls when data has not yet been populated as necessary for preconditions
