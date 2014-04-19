@@ -103,7 +103,7 @@ class Channel:
 class Mailbox:
 	def __init__(self, handle, users=[], blocked=[]):
 		self.handle = handle
-		self.user = users
+		self.users = users
 		self.blocked = blocked
 		MAILBOXES[handle] = self
 	def recieve_message(self, message, originbox):
