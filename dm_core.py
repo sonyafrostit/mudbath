@@ -125,7 +125,6 @@ class User:
 		self.a_last_visit_date = user_data[4]
 		self.a_permissions = user_data[5] # See how pretty and efficient this is? :D
 		self.a_silenced = user_data[6]
-		self.a_status = user_data[7]
 		# Continue Login Sequence
 		self.message_function = self.login_passwd
 		self.client.send("Password:")
