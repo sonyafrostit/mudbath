@@ -1,5 +1,8 @@
 import dm_global, dm_ansi
 
+MAILBOXES = {}
+CHANNELS = {}
+
 class Channel:
 	def __init__(self, name, active=True, private=False):
 		self.name = name
@@ -8,6 +11,7 @@ class Channel:
 		self.gagged_users = []
 		self.banned_users = []
 		self.private = private
+		CHANNELS[name] = self
 	def unplug_user(self, user):
 		"""
 		Unplug a user from the channel.
@@ -82,4 +86,16 @@ class Channel:
 			return "You have been silenced. Please contact an admin."
 		else:
 			return ""
+#
+# Mailbox class to handle pm's
+#
+class Mailbox:
+	def __init__(self, handle, users=[]):
+		self.handle = handles
+		self.user = users
+		MAILBOX[handle] = self
+	def recieve_message(self, message, originbox):
+		for user in self.users:
+			if user.a_account_name
+			user.client.send("")
 
