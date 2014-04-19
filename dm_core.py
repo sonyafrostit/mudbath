@@ -507,7 +507,7 @@ class User:
 			if len(args) > 128:
 				self.client.send("Channel name too long. Must be < 128 characters\n")
 				return
-			for channel in CHANNELS:
+			for channel in dm_global.CHANNELS:
 				if channel.args == args:
 					self.client.send("Channel already exists with that name\n")
 					return
