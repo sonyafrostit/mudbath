@@ -1,4 +1,4 @@
-import hashlib, datetime, dm_global, dm_ansi
+import hashlib, datetime, dm_global, dm_ansi, dm_comm
 
 #
 # HELPFILES - A way to create some helpfiles for the benefit of users! Hopefully they'll read 'em....hopefully
