@@ -89,7 +89,7 @@ class User:
 				dm_global.ADMIN),
 
 			'shutdown': (self.shutdown,
-				"%sshutdown%s - Shuts down the server",
+				"%sshutdown%s - Shuts down the server%s",
 				dm_global.ADMIN)
 
 		}
