@@ -511,7 +511,8 @@ class User:
 					return
 			CHANNELS.add(dm_comm.Channel(args))
 			dm_global.db_conn.create_channel(args)
-			self.client.send("Channel '%s%s%s' created\n" % (dm_ansi.CYAN, args, dm_ansi.CLEAR)
+			self.client.send("Channel '%s%s%s' created\n" % (dm_ansi.CYAN, args, dm_ansi.CLEAR))
+			return
 	# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
 	# They can also shadowban.
 	# Even administrators should use these commands instead when dealing with rogue users,
