@@ -90,6 +90,10 @@ class User:
 
 			'open': (self.open,
 				"%sopen%s - Opens a channel with a title. Usage: 'open <title>'%s",
+				dm_global.ADMIN),
+
+			'shutdown': (self.shutdown,
+				"%sshutdown%s - Shuts down the server",
 				dm_global.ADMIN)
 
 		}
@@ -545,7 +549,12 @@ class User:
 		for key in dm_global.PERMS_DICT.keys():
 			s += "%s\n"%(key)
 		return s
-	
+	def shutdown(self, args):
+		"""
+		Shutdown
+		"""
+		self.broadcast("SYSTEM IS SHUTTING DOWN NOW!")
+		sys.exit(0)
 	#
 	# Other misc methods
 	#

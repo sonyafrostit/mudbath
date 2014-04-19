@@ -1,13 +1,13 @@
 import dm_global, dm_ansi
 
 class Channel:
-	def __init__(self, name, topic="", active=True):
+	def __init__(self, name, active=True, private=False):
 		self.name = name
-		self.topic = topic
 		self.users = []
 		self.hushed_users = []
 		self.gagged_users = []
 		self.banned_users = []
+		self.private = private
 	def unplug_user(self, user):
 		"""
 		Unplug a user from the channel.
