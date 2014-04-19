@@ -500,18 +500,18 @@ class User:
 		Open a channel
 		"""
 		if args == "":
-			self.client.send("Please enter in the name of the channel you would like to open. Format 'open <name>'")
+			self.client.send("Please enter in the name of the channel you would like to open. Format 'open <name>'\n")
 		else:
 			if len(args) > 128:
-				self.client.send("Channel name too long. Must be < 128 characters")
+				self.client.send("Channel name too long. Must be < 128 characters\n")
 				return
 			for channel in CHANNELS:
 				if channel.args == args:
-				self.client.send("Channel already exists with that name")
-				return
+					self.client.send("Channel already exists with that name\n")
+					return
 			CHANNELS.add(dm_comm.Channel(args))
 			dm_global.db_conn.create_channel(args)
-			self.client.send("Channel '%s%s%s' created" % (dm_ansi.CYAN, args, dm_ansi.CLEAR)
+			self.client.send("Channel '%s%s%s' created\n" % (dm_ansi.CYAN, args, dm_ansi.CLEAR)
 	# NOTE: These commands are for administrators. Moderators can only silence/unsilence.
 	# They can also shadowban.
 	# Even administrators should use these commands instead when dealing with rogue users,
