@@ -108,7 +108,7 @@ class Mailbox:
 		MAILBOXES[handle] = self
 	def recieve_message(self, message, originbox):
 		for user in self.users:
-			if user.a_account_name == originbox:
-				user.client.send("%s[%s]%s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
+			if user.a_account_name == self.handle:
+				user.client.send("%s[%s]%s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox.handle, dm_ansi.CLEAR, message + "\n"))
 			else:
-				user.client.send("%s(@%s)%s[%s]%s@%s:%s %s" % (dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox, dm_ansi.CLEAR, message + "\n"))
+				user.client.send("%s(@%s)%s[%s]%s@%s:%s %s" % (dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox.handle, dm_ansi.CLEAR, message + "\n"))
