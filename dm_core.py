@@ -442,7 +442,7 @@ class User:
 			return;
 		for user in dm_global.USER_LIST:
 			if user.a_account_name == args:
-				dm_global.USER_LIST[args].a_silenced = True
+				user.a_silenced = True
 				dm_global.db_conn.update_user_silence(user)
 				return "Muted"
 			return "That user doesn't exist!"
@@ -454,7 +454,7 @@ class User:
 			return;
 		for user in dm_global.USER_LIST:
 			if user.a_account_name == args:
-				dm_global.USER_LIST[args].a_silenced = False
+				user.a_silenced = False
 				dm_global.db_conn.update_user_silence(user)
 				return "Unmuted"
 			return "That user doesn't exist!"

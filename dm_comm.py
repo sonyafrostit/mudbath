@@ -57,8 +57,7 @@ class Channel:
 			return "User already in channel"
 		else:
 			self.users.append(user)
-			self.broadcast("User %s has joined channel %s" % (user.a_account_name, self.name))
-			return "User added to channel"
+			self.broadcast("User %s has joined channel %s\n" % (user.a_account_name, self.name))
 			
 	def gag(self, user):
 		"""
