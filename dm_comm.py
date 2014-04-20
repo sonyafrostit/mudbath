@@ -94,6 +94,7 @@ class Channel:
 			return "You have been silenced. Please contact an admin."
 		else:
 			self.broadcast(self.format_message(message, user))
+			dm_global.db_conn.log_channel(user.a_account_name, self.name, message)
 			return ""
 	def handle_input(self, message, user):
 		if user in self.users:

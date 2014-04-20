@@ -127,8 +127,9 @@ class DatabaseConnection:
 	def log_message(self, sender, recipient, message):
 		self.execute_query("INSERT INTO messages (sender, recipient, message) VALUES (%s, %s, %s);", [sender, recipient, message])
 		self.conn.commit()
-
-
+	def log_channel(self, sender, channel, message):
+		self.execute_query("INSERT INTO channelmessages (sender, channel, message) VALUES (%s, %s, %s);", [sender, channel, message])
+		self.conn.commit()
 	# Channels data
 
 	def create_channel(self, name):
