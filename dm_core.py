@@ -146,7 +146,7 @@ class User:
 		if len(message) == 0:
 			return
 		if hashlib.sha256(message + dm_global.SALT).hexdigest() == self.a_password:
-			# TODO Implement Standard Sequence
+
 			self.client.send(dm_global.LOGIN_MESSAGE + "\n")
 			self.logged_in = True
 			self.client.send("Last Visit was on %s\n"%(self.a_last_visit_date))
@@ -283,6 +283,8 @@ class User:
 		elif command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
 			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
+		elif command in dm_comm.CHANNELS:
+			self.client.send(dm_comm.CHANNELS[args].handle_input(message, self))
 		elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
 			self.client.send(self.USER_COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
@@ -426,7 +428,9 @@ class User:
 		"""
 		if args in dm_comm.CHANNELS:
 			if not dm_comm.CHANNELS[args].private:
-				dm_comm.CHANNELS[args].plug(self)
+				return dm_comm.CHANNELS[args].plug(self)
+		else:
+			return "Channel does not exist!"
 	#
 	# GLOBAL COMMANDS - commands that have to do with server-wide actions or admin level stuff
 	#

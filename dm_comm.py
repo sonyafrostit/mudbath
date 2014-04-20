@@ -98,6 +98,9 @@ class Channel:
 		else:
 			self.broadcast(format_message(message, user))
 			return ""
+	def handle_input(self, message, user):
+		if user in self.users:
+			return msg(message)
 #
 # Mailbox class to handle pm's
 #
