@@ -44,6 +44,10 @@ class User:
 				"%sperms%s - Shows you what your permissions are%s",
 				dm_global.USER),
 
+			'join': (self.join,
+				"%sjoin%s - Joins a channel%s",
+				dm_global.CHANNEL)
+
 		}
 		# Global commands dictionary
 
