@@ -284,7 +284,7 @@ class User:
 			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
 		elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
-			self.client.send(self.USER_COMMANDS[command][0](args) + dm_ansi.CLEAR)
+			self.client.send(self.USER_COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
 		else:
 			self.client.send("Command/Channel either does not exist or you do not have permission to do that. Try 'help' if you're lost!\n")
