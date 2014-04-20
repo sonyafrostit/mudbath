@@ -20,7 +20,7 @@ LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")[0][0]
 
 NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0]
 
-dm_comm.load_channels()
+
 
 # Permission Groups
 #
@@ -54,7 +54,7 @@ PERMS_DICT = {
 }
 
 DEFAULT_PERMISSIONS = USER + CHANNEL
-
+dm_comm.load_channels()
 # Load channels
 
 
