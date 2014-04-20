@@ -79,7 +79,7 @@ class Channel:
 		"""
 		BAN HAMMER!
 		"""
-		if user in users:
+		if user in self.users:
 			self.unplug_user(user)
 		if user in self.banned_users:
 			return "User already banned"
