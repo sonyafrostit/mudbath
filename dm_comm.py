@@ -94,7 +94,7 @@ class Channel:
 		elif user.silenced:
 			return "You have been silenced. Please contact an admin."
 		else:
-			self.broadcast(format_message(message, user))
+			self.broadcast(self.format_message(message, user))
 			return ""
 	def handle_input(self, message, user):
 		if user in self.users:
