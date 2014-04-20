@@ -22,7 +22,7 @@ class Channel:
 		self.CHANNEL_COMMANDS = {
 			'ban': (self.ban, "/ban - Bans a specific user.", dm_global.MODERATOR),
 			'hush': (self.hush, "/hush - Hushes a particular user, which prevents user from sending messages", dm_global.MODERATOR),
-			'gag': (self.gag, "/gag - Gags a user, which is like a shadowban")
+			'gag': (self.gag, "/gag - Gags a user, which is like a shadowban", dm_global.MODERATOR)
 
 		}
 		CHANNELS[name] = self
