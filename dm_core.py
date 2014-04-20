@@ -416,6 +416,13 @@ class User:
 			for key in dm_global.PERMS_DICT:
 				if self.has_permission(dm_global.PERMS_DICT[key]):
 					self.client.send(key + "\n")
+	def join(self, args):
+		"""
+		Joins a channel
+		"""
+		if args in dm_comm.CHANNELS:
+			if not dm_comm.CHANNELS[args].private:
+				dm_comm.CHANNELS[args].plug(self)
 	#
 	# GLOBAL COMMANDS - commands that have to do with server-wide actions or admin level stuff
 	#
@@ -507,7 +514,7 @@ class User:
 			if channel in dm_comm.CHANNELS:
 				self.client.send("Channel already exists with that name\n")
 				return
-			dm_global.CHANNELS.append(dm_comm.Channel(args))
+			dm_comm.Channel(args)
 			dm_global.db_conn.create_channel(args)
 			self.client.send("Channel '%s%s%s' created\n" % (dm_ansi.CYAN, args, dm_ansi.CLEAR))
 			return
