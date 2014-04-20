@@ -87,9 +87,9 @@ class Channel:
 		"""
 		Called when a user sends a message
 		"""
-		if user in hushed_users:
+		if user in self.hushed_users:
 			return "You're not able to send messages to that channel!"
-		elif user in gagged_users:
+		elif user in self.gagged_users:
 			return self.format_message(message, user) # Gagged user can't see that they're banned.
 		elif user.silenced:
 			return "You have been silenced. Please contact an admin."
