@@ -186,7 +186,7 @@ class User:
 		if len(message) == 0:
 			return
 		if message.upper()[0] == 'Y': # Only check the first letter, because it covers the most cases.
-			self.client.newaccount_username(message)
+			self.newaccount_username(message)
 		elif message.upper()[0] == 'N':
 			
 			self.logout()
