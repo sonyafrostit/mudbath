@@ -92,6 +92,7 @@ class Channel:
 		"""
 		Called when a user sends a message
 		"""
+		message.lstrip()
 		if user in self.hushed_users:
 			return "You're not able to send messages to that channel!"
 		elif user in self.gagged_users:
