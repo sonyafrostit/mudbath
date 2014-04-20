@@ -515,7 +515,7 @@ class User:
 				return
 			if args in self.GLOBAL_COMMANDS or args in self.USER_COMMANDS:
 				self.client.send("Channel name cannot conflict with an existing command\n")
-			if channel in dm_comm.CHANNELS:
+			if args in dm_comm.CHANNELS:
 				self.client.send("Channel already exists with that name\n")
 				return
 			dm_comm.Channel(args)
