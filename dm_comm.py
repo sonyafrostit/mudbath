@@ -19,6 +19,12 @@ class Channel:
 		self.gagged_users = []
 		self.banned_users = []
 		self.private = private
+		self.CHANNEL_COMMANDS = {
+			'ban': (self.ban, "/ban - Bans a specific user.", dm_global.MODERATOR),
+			'hush': (self.hush, "/hush - Hushes a particular user, which prevents user from sending messages", dm_global.MODERATOR),
+			'gag': (self.gag, "/gag - Gags a user, which is like a shadowban")
+
+		}
 		CHANNELS[name] = self
 	def unplug_user(self, user):
 		"""
@@ -92,10 +98,23 @@ class Channel:
 			return self.format_message(message, user) # Gagged user can't see that they're banned.
 		elif user.silenced:
 			return "You have been silenced. Please contact an admin."
-		else:
+		elif len(message) > 0:
+			if message[0] == '/':
+				command = ""
+				args = ""
+				space_index = message.find(' ')
+				if space_index == -1:
+					command = message[1:]
+				else:
+					command = message[1:space_index]
+					args = message[space_index + 1:]
+				if command in self.CHANNEL_COMMANDS:
+					self.CHANNEL_COMMANDS[command][0](args)
 			self.broadcast(self.format_message(message, user))
 			dm_global.db_conn.log_channel(user.a_account_name, self.name, message)
 			return ""
+		else:
+			return "Type in a message after the channel name. Example: '%s Hello!'" % (self.name)
 	def handle_input(self, message, user):
 		if user in self.users:
 			return self.msg(message, user)
