@@ -110,7 +110,7 @@ class Channel:
 					command = message[1:space_index]
 					args = message[space_index + 1:]
 				if command in self.CHANNEL_COMMANDS:
-					self.CHANNEL_COMMANDS[command][0](args)
+					user.client.send(self.CHANNEL_COMMANDS[command][0](args))
 			self.broadcast(self.format_message(message, user))
 			dm_global.db_conn.log_channel(user.a_account_name, self.name, message)
 			return ""
