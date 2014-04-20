@@ -284,7 +284,7 @@ class User:
 			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
 		elif command in dm_comm.CHANNELS:
-			self.client.send(dm_comm.CHANNELS[args].handle_input(message, self))
+			self.client.send(dm_comm.CHANNELS[command].handle_input(message, self))
 		elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
 			self.client.send(self.USER_COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
