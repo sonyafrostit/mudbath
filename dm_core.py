@@ -440,22 +440,23 @@ class User:
 		"""
 		if len(args) == 0:
 			return;
-		for user in dm_global.USER_LIST if user.a_account_name == args:
-			dm_global.USER_LIST[args].a_silenced = True
-			dm_global.db_conn.update_user_silence(user)
-			return "Muted"
-		return "That user doesn't exist!"
+		for user in dm_global.USER_LIST:
+			if user.a_account_name == args:
+				dm_global.USER_LIST[args].a_silenced = True
+				dm_global.db_conn.update_user_silence(user)
+				return "Muted"
+			return "That user doesn't exist!"
 	def unsilence(self, args):
 		"""
 		Command to turn on user access to channels.
 		"""
 		if len(args) == 0:
 			return;
-		elif args in dm_global.USER_LIST:
-			dm_global.USER_LIST[args].a_silenced = False
-			dm_global.db_conn.update_user_silence(dm_global.USER_LIST[args])
-			return "Unmuted"
-		else:
+		for user in dm_global.USER_LIST:
+			if user.a_account_name == args:
+				dm_global.USER_LIST[args].a_silenced = False
+				dm_global.db_conn.update_user_silence(user)
+				return "Unmuted"
 			return "That user doesn't exist!"
 	def broadcast(self, args):
 		"""
