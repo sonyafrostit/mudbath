@@ -87,9 +87,7 @@ class Channel:
 		"""
 		Called when a user sends a message
 		"""
-		if user not in users:
-			return "You're not connected to that channel!"
-		elif user in hushed_users:
+		if user in hushed_users:
 			return "You're not able to send messages to that channel!"
 		elif user in gagged_users:
 			return self.format_message(message, user) # Gagged user can't see that they're banned.
@@ -101,6 +99,8 @@ class Channel:
 	def handle_input(self, message, user):
 		if user in self.users:
 			return self.msg(message, user)
+		else:
+			return "You're not connected to that channel!"
 #
 # Mailbox class to handle pm's
 #
