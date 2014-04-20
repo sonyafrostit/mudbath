@@ -100,7 +100,7 @@ class Channel:
 			return ""
 	def handle_input(self, message, user):
 		if user in self.users:
-			return self.msg(message)
+			return self.msg(message, user)
 #
 # Mailbox class to handle pm's
 #
