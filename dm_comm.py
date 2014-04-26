@@ -41,6 +41,8 @@ class Channel:
 		Send a message to everyone!
 		"""
 		for user in self.users:
+			if user is None:
+				self.users.remove(user)
 			if user not in exceptions:
 				user.client.send(message)
 		return "Message broadcast successfully"
