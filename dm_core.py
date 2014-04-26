@@ -259,7 +259,7 @@ class User:
 		else:
 			self.client.send("Passwords do not match!\n")
 			
-			self.message_function = newaccount_password
+			self.message_function = self.newaccount_password
 			self.client.send("Enter a Password (Warning: This will be sent over insecure connection): ")
 
 	# STANDARD SEQUENCE
