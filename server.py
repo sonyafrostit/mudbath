@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import dm_global, dm_core
+import dm_global, dm_core, traceback
 from miniboa import TelnetServer
 
 SERVER_RUN = True
@@ -49,9 +49,16 @@ def process_clients():
     input available via client.get_command().
     """
     for user in dm_global.USER_LIST:
-        if user.client.active and user.client.cmd_ready:
-            ## If the client sends input echo it to the chat room
-            chat(user)
+        try:
+            if user.client.active and user.client.cmd_ready:
+                ## If the client sends input echo it to the chat room
+                chat(user)
+        except dm_global.ExitSignal as ex:
+            print "Bye!"
+            SERVER_RUN = False
+        except:
+            user.client.send(traceback.format_exc())
+            traceback.print_exc()
 
     
 
