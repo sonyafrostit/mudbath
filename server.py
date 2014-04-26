@@ -48,6 +48,7 @@ def process_clients():
     Check each client, if client.cmd_ready == True then there is a line of
     input available via client.get_command().
     """
+    global SERVER_RUN
     for user in dm_global.USER_LIST:
         try:
             if user.client.active and user.client.cmd_ready:
