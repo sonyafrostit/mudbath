@@ -561,7 +561,7 @@ class User:
 		Shutdown
 		"""
 		self.broadcast("SYSTEM IS SHUTTING DOWN NOW!")
-		sys.exit(0)
+		raise dm_global.ExitSignal(0)
 	#
 	# Other misc methods
 	#
