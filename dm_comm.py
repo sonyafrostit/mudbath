@@ -43,7 +43,7 @@ class Channel:
 		for user in self.users:
 			if user is None:
 				self.users.remove(user)
-			if user not in exceptions:
+			elif user not in exceptions:
 				user.client.send(message)
 		return "Message broadcast successfully"
 	def hush(self, user):
