@@ -1,4 +1,4 @@
-import MySQLdb as mdb
+from testing import test_db as mdb
 import datetime, sys
 
 class DatabaseConnection:
