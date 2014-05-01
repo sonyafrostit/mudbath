@@ -122,9 +122,9 @@ class DatabaseConnection:
 		else:
 			return "That user doesn't exist!"
 	def log_message(self, sender, recipient, message):
-		messages.append((next_message, sender, recipient, message, DateTime.DateTime.now())
+		messages.append((next_message, sender, recipient, message, DateTime.DateTime.now()))
 	def log_channel(self, sender, channel, message):
-		self.execute_query("INSERT INTO channelmessages (sender, channel, message) VALUES (%s, %s, %s);", [sender, channel, message])
+		channelmessages.append((sender, channel, message))
 		self.conn.commit()
 	# Channels data
 
