@@ -28,8 +28,8 @@ NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0
 def cleanup(user_addrport):
 	for user in USER_LIST:
         if user.client.addrport() == user_addrport:
-            USER_LIST.remove(user)
-            user.client = None
+			USER_LIST.remove(user)
+			user.client = None
 			for channel in dm_comm.CHANNELS:
 				dm_comm.CHANNELS[channel].unplug_user(user)
 			return
