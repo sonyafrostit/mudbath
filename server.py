@@ -17,10 +17,10 @@ def on_connect(client):
 
 
 def on_disconnect(client):
-    """
-    Handles lost connections.
-    """
-    print "-- Lost connection to %s" % client.addrport()	
+	"""
+	Handles lost connections.
+	"""
+	print "-- Lost connection to %s" % client.addrport()
 	dm_global.cleanup(user.client.addrport())
 
 
