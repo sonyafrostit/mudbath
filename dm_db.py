@@ -106,7 +106,7 @@ class DatabaseConnection:
 		"""
 		Changes the password of a given User object's representation in the database
 		"""
-		self.execute_query("UPDATE accounts SET password=%s WHERE account_name=%s")
+		self.execute_query("UPDATE accounts SET password=%s WHERE account_name=%s", [newpass, user.a_account_name])
 	def change_permissions_cmd(self, account_name, perm_change):
 		"""
 		Does data checks before changing permissions. perm_change is a number. Positive for adding permissions, negative for removing them"
