@@ -23,7 +23,6 @@ class Channel:
 			'ban': (self.ban, "/ban - Bans a specific user.", dm_global.MODERATOR),
 			'hush': (self.hush, "/hush - Hushes a particular user, which prevents user from sending messages", dm_global.MODERATOR),
 			'gag': (self.gag, "/gag - Gags a user, which is like a shadowban", dm_global.MODERATOR)
-
 		}
 		CHANNELS[name] = self
 	def unplug_user(self, user):
@@ -88,8 +87,13 @@ class Channel:
 		else:
 			self.banned_users.append(user)
 			return "User added to banlist"
-	def format_message(self, message, user):
-		return "%s(%s)%s[%s]%s%s:%s %s" % (dm_ansi.BGREEN + dm_ansi.BOLD + dm_ansi.WHITE, self.name, dm_ansi.CLEAR, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW + dm_ansi.BOLD, user.a_account_name, dm_ansi.CLEAR, message + "\n")
+	def format_message(self, message, user, is_me=False):
+		usertag = ""
+		if is_me:
+			usertag = "*%s " % (user.a_account_name)
+		else:
+			usertag = "%s: " % (user.a_account_name)
+		return "%s(%s)%s[%s]%s%s%s%s" % (dm_ansi.BGREEN + dm_ansi.BOLD + dm_ansi.WHITE, self.name, dm_ansi.CLEAR, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW + dm_ansi.BOLD, usertag, dm_ansi.CLEAR, message + "\n")
 	def msg(self, message, user):
 		"""
 		Called when a user sends a message

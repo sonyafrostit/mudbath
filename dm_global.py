@@ -21,8 +21,18 @@ LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")[0][0]
 
 NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0]
 
+#
+# Function to clean up data when user goes offline
+#
 
-
+def cleanup(user_addrport):
+	for user in USER_LIST:
+        if user.client.addrport() == user_addrport:
+            USER_LIST.remove(user)
+            user.client = None
+			for channel in dm_comm.CHANNELS:
+				dm_comm.CHANNELS[channel].unplug_user(user)
+			return
 # Permission Groups
 #
 # How it works: Addition and subtraction. If you want to add a person to a group, add the group to their a_permissions. As in, a_permissions += group. Subtract for taking away permissions.

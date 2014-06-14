@@ -18,14 +18,13 @@ def on_connect(client):
 
 def on_disconnect(client):
     """
-    Sample on_disconnect function.
     Handles lost connections.
     """
     print "-- Lost connection to %s" % client.addrport()
-    for user in dm_global.USER_LIST:
-        if user.client.addrport() == client.addrport():
-            dm_global.USER_LIST.remove(user)
-            user.client = None
+    
+			
+	dm_global.cleanup(user.client.addrport())
+		
             
 
 
