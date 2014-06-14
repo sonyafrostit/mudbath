@@ -102,6 +102,11 @@ class DatabaseConnection:
 		"""
 		self.execute_query("UPDATE accounts SET {a}=%s WHERE account_name=%s;".format(a=attribute), [value, a_account_name])
 		self.conn.commit()
+	def change_password(self, user, newpass):
+		"""
+		Changes the password of a given User object's representation in the database
+		"""
+		self.execute_query("UPDATE accounts SET password=%s WHERE account_name=%s")
 	def change_permissions_cmd(self, account_name, perm_change):
 		"""
 		Does data checks before changing permissions. perm_change is a number. Positive for adding permissions, negative for removing them"
@@ -128,7 +133,7 @@ class DatabaseConnection:
 		self.execute_query("INSERT INTO messages (sender, recipient, message) VALUES (%s, %s, %s);", [sender, recipient, message])
 		self.conn.commit()
 	def log_channel(self, sender, channel, message):
-		self.execute_query("INSERT INTO channelmessages (sender, channel, message) VALUES (%s, %s, %s);", [sender, channel, message])
+		self.execute_query("INSERT INTO channel_messages (sender, channel, message) VALUES (%s, %s, %s);", [sender, channel, message])
 		self.conn.commit()
 	# Channels data
 

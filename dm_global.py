@@ -9,6 +9,7 @@ USER_LIST = []
 # Salt for the password table to protect against rainbow table attacks
 SALT = db_conn.execute_query("SELECT salt FROM serverdata;")[0][0]
 
+
 # Timeout for idle clients
 TIMEOUT = db_conn.execute_query("SELECT timeout FROM serverdata;")[0][0]
 
@@ -40,7 +41,7 @@ USER = 8
 
 CHANNEL = 16
 
-# For use when parsing commands only. Use the previous groups to programattically add permissons
+# For use when parsing commands only. Use the previous groups to add permissons
 PERMS_DICT = {
 
 	"Admin" : ADMIN,
