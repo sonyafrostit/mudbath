@@ -1,6 +1,6 @@
 CREATE DATABASE mudbath;
 
-CREATE TABLE accounts (account_id INT AUTO_INCREMENT NOT NULL, permissions TINYINT NOT NULL, password VARCHAR(64), creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, account_name VARCHAR(128), last_visit_date DATETIME, display_name VARCHAR(256), PRIMARY KEY (account_id, account_name));
+CREATE TABLE accounts (account_id INT AUTO_INCREMENT NOT NULL, permissions TINYINT NOT NULL, password VARCHAR(64), creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, account_name VARCHAR(128), last_visit_date DATETIME, display_name VARCHAR(256), gamedataid INT DEFAULT 0, PRIMARY KEY (account_id, account_name));
 
 INSERT INTO accounts(account_name, password, permissions) VALUES('root', '< password hash + salt>', 1);
 
@@ -19,3 +19,22 @@ CREATE TABLE `mudbath`.`channel_messages` (
   `sender` VARCHAR(128) NOT NULL,
   `channel` VARCHAR(128) NOT NULL,
   `message` TEXT NOT NULL);
+
+CREATE TABLE `mudbath`.`serverlogs` (
+  `log_id` INT NOT NULL AUTO_INCREMENT,
+  `datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `message` TEXT NULL,
+  `channel` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`log_id`));
+  
+CREATE TABLE `mudbath`.`character` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  `description` TEXT NULL,
+  `race` INT NULL,
+  `pos_pn` VARCHAR(45) NULL,
+  `sub_pn` VARCHAR(45) NULL,
+  `obj_pn` VARCHAR(45) NULL,
+  `gender` VARCHAR(45) NULL,
+  `age` INT NULL,
+  PRIMARY KEY (`id`));

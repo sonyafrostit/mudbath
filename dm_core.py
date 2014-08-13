@@ -19,7 +19,7 @@ class User:
 		# Begin Login Sequence:
 		client.send("Username (if this is your first visit, enter in a username to sign up): ")
 		self.message_function = self.login_uname
-		
+		self.game_data = None;
 		self.password_attempts = 0
 		self.silenced = False
 		# To prevent function calls when data has not yet been populated as necessary for preconditions
@@ -562,6 +562,11 @@ class User:
 		"""
 		self.broadcast("SYSTEM IS SHUTTING DOWN NOW!")
 		raise dm_global.ExitSignal(0)
+		
+	def inbox(self, args):
+		"""
+		Displays the unread messages in a users inbox.
+		"""
 	#
 	# Other misc methods
 	#

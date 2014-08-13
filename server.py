@@ -7,10 +7,9 @@ SERVER_RUN = True
 
 def on_connect(client):
     """
-    Sample on_connect function.
     Handles new connections.
     """
-    print "++ Opened connection to %s" % client.addrport()
+    dm_global.output_log( "SYSTEM: ++ Opened connection to %s" % client.addrport())
     
     dm_global.USER_LIST.append(dm_core.User(client))
     
@@ -20,7 +19,7 @@ def on_disconnect(client):
 	"""
 	Handles lost connections.
 	"""
-	print "-- Lost connection to %s" % client.addrport()
+	dm_global.output_log("SYSTEM: -- Lost connection to %s" % client.addrport())
 	dm_global.cleanup(client.addrport())
 
 
@@ -34,7 +33,7 @@ def kick_idle():
     ## Who hasn't been typing?
     for user in dm_global.USER_LIST:
         if user.client.idle() > dm_global.TIMEOUT:
-            print('-- Kicking idle lobby client from %s' % user.client.addrport())
+            dm_global.output_log('SYSTEM: -- Kicking idle lobby client from %s' % user.client.addrport()))
             user.client.deactivate
 
 
@@ -50,11 +49,11 @@ def process_clients():
                 ## If the client sends input echo it to the chat room
                 chat(user)
         except dm_global.ExitSignal as ex:
-            print "Bye!"
             SERVER_RUN = False
         except:
-            user.client.send(traceback.format_exc())
-            traceback.print_exc()
+			user.client.send("OOPS! Something went wrong! Please contact the admins\n\n")
+			dm_global.server_log("SYSTEM: Error (USER %s):\n%s" % (user.a_account_name, traceback.format_exc()))
+            
 
     
 
@@ -89,7 +88,7 @@ if __name__ == '__main__':
         timeout = .05
         )
 
-    print(">> Listening for connections on port %d.  CTRL-C to break."
+    dm_global.output_log("SYSTEM: Server startup complete. Listening for connections on port %d."
         % telnet_server.port)
 
     ## Server Loop
@@ -98,4 +97,4 @@ if __name__ == '__main__':
         kick_idle()                 ## Check for idle clients
         process_clients()           ## Check for client input
 
-    print(">> Server shutdown.")
+    dm_global.output_log("SYSTEM: Server shutdown.")
