@@ -21,14 +21,10 @@ LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")[0][0]
 
 NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0]
 
-#Rate limiting, sets the minimum amount of time between incoming commands TODO IMPLEMENT
-
 #
 # Function to clean up data when user goes offline
 #
-def output_log(message):
-	print message
-	db_conn.log_server(message)
+
 def cleanup(user_addrport):
 	for user in USER_LIST:
 		if user.client.addrport() == user_addrport:

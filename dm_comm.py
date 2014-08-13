@@ -1,5 +1,6 @@
 import dm_global, dm_ansi, datetime
 
+MAILBOXES = {}
 CHANNELS = {}
 
 
@@ -11,7 +12,7 @@ def load_channels():
 
 
 class Channel:
-	def __init__(self, name, active=True, private=True):
+	def __init__(self, name, active=True, private=False):
 		self.name = name
 		self.users = []
 		self.hushed_users = []
@@ -21,24 +22,16 @@ class Channel:
 		self.CHANNEL_COMMANDS = {
 			'ban': (self.ban, "/ban - Bans a specific user.", dm_global.MODERATOR),
 			'hush': (self.hush, "/hush - Hushes a particular user, which prevents user from sending messages", dm_global.MODERATOR),
-			'gag': (self.gag, "/gag - Gags a user, which is like a shadowban", dm_global.MODERATOR),
-			'kick': (self.kick "/kick - Kicks a user from the channel", dm_global.MODERATOR),
-			'me': (self.me "/me - Use to update your status on a channel", dm_global.CHANNEL)
+			'gag': (self.gag, "/gag - Gags a user, which is like a shadowban", dm_global.MODERATOR)
 		}
 		CHANNELS[name] = self
-		dm_global.server_log("CHANNEL: Channel $s opened." % name)
-	def me(self, message, user):
-		"""
-		Sends a /me message
-		"""
-		self.msg(message, user, True)
 	def unplug_user(self, user):
 		"""
 		Unplug a user from the channel.
 		"""
 		if user in self.users:
 			self.users.remove(user)
-			self.broadcast("%sUser %s disconnected%s from %s" % (dm_ansi.RED, user.a_account_name, self.name, dm_ansi.CLEAR))
+			self.broadcast("%sUser %s disconnected%s from %s" % (dm_ansi.RED, account_name, self.name, dm_ansi.CLEAR))
 			return "User successfully disconnected from channel"
 		else:
 			return "User not connected to channel"
@@ -94,14 +87,14 @@ class Channel:
 		else:
 			self.banned_users.append(user)
 			return "User added to banlist"
-	def format_message(self, message, user, is_me):
+	def format_message(self, message, user, is_me=False):
 		usertag = ""
 		if is_me:
 			usertag = "*%s " % (user.a_account_name)
 		else:
 			usertag = "%s: " % (user.a_account_name)
 		return "%s(%s)%s[%s]%s%s%s%s" % (dm_ansi.BGREEN + dm_ansi.BOLD + dm_ansi.WHITE, self.name, dm_ansi.CLEAR, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW + dm_ansi.BOLD, usertag, dm_ansi.CLEAR, message + "\n")
-	def msg(self, message, user, is_me=False):
+	def msg(self, message, user):
 		"""
 		Called when a user sends a message
 		"""
@@ -109,7 +102,7 @@ class Channel:
 		if user in self.hushed_users:
 			return "You're not able to send messages to that channel!"
 		elif user in self.gagged_users:
-			return self.format_message(message, user, is_me) # Gagged user can't see that they're banned.
+			return self.format_message(message, user) # Gagged user can't see that they're banned.
 		elif user.silenced:
 			return "You have been silenced. Please contact an admin."
 		elif len(message) > 0:
@@ -125,7 +118,7 @@ class Channel:
 				if command in self.CHANNEL_COMMANDS:
 					user.client.send(self.CHANNEL_COMMANDS[command][0](args))
 					return
-			self.broadcast(self.format_message(message, user, is_me))
+			self.broadcast(self.format_message(message, user))
 			dm_global.db_conn.log_channel(user.a_account_name, self.name, message)
 			return ""
 		else:
@@ -135,3 +128,19 @@ class Channel:
 			return self.msg(message, user)
 		else:
 			return "You're not connected to that channel!"
+#
+# Mailbox class to handle pm's
+#
+class Mailbox:
+	def __init__(self, handle, users=[], blocked=[]):
+		self.handle = handle
+		self.users = users
+		self.blocked = blocked
+		MAILBOXES[handle] = self
+	def recieve_message(self, message, originbox):
+		dm_global.db_conn.log_message(originbox.handle, self.handle, message)
+		for user in self.users:
+			if user.a_account_name == self.handle:
+				user.client.send("%s[%s] %s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox.handle, dm_ansi.CLEAR, message + "\n"))
+			else:
+				user.client.send("%s(@%s) %s[%s] %s@%s:%s %s" % (dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox.handle, dm_ansi.CLEAR, message + "\n"))
