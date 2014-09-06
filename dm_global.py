@@ -1,5 +1,4 @@
 import dm_db, dm_comm
-
 # Database Connection
 db_conn = dm_db.DatabaseConnection(username='mudbath', password='St1ll@l1v3!', database='mudbath')
 
@@ -23,8 +22,11 @@ NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0
 # Helpfiles
 HELPFILES = db_conn.get_helpfiles()
 
+
 # Commends dictionary
 COMMANDS = {}
+import dm_commands
+
 #Reserved Words: Words you cannot use for channel names!
 
 RESERVED_WORDS = []
