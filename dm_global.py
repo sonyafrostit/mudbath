@@ -342,7 +342,7 @@ def perms(user, args):
 		user.client.send("Root")
 	else:
 		for key in PERMS_DICT:
-			if user.has_permission(.PERMS_DICT[key]):
+			if user.has_permission(PERMS_DICT[key]):
 				user.client.send(key + "\n")
 def join(user, args):
 	"""
