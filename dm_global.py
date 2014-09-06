@@ -25,7 +25,7 @@ HELPFILES = db_conn.get_helpfiles()
 
 # Commends dictionary
 COMMANDS = {}
-import dm_commands
+
 
 #Reserved Words: Words you cannot use for channel names!
 
@@ -95,3 +95,5 @@ class ExitSignal(Exception):
 	def __str__(self):
 		return repr(self.value)
 
+# populate commands!
+import dm_commands
