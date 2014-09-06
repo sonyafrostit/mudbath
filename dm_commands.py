@@ -1,52 +1,6 @@
 import dm_global
 
-# Global commands dictionary
 
-GLOBAL_COMMANDS = {
-	'welcome_edit': (welcome_edit,
-		"%swelcome_edit%s - Changes the welcome banner which displays on connect%s",
-		dm_global.ADMIN),
-	'login_edit': (login_edit,
-		"%slogin_edit%s - Changes the login banner which displays on login%s",
-		dm_global.ADMIN),
-
-	'newuser_edit': (newuser_edit,
-		"%snewuser_edit%s - Changes the banner which displays on creation of a new account%s",
-		dm_global.ADMIN),
-
-	'broadcast': (broadcast,
-		"%sbroadcast%s - Broadcasts a message%s",
-		dm_global.ADMIN),
-
-	'ch_perm': (change_permissions,
-		"%sch_perm%s - Changes the permissions for a particular user. Format: 'ch_perm <user> <+/-> permission>'%s",
-		dm_global.ADMIN),
-
-	'get_perm': (get_permissions,
-		"%sget_perm%s - Displays a list of possible permissions%s",
-		dm_global.ADMIN),
-
-	'write_helpfile': (write_helpfile,
-		"%swrite_helpfile%s - Writes a new helpfile for users to read!%s",
-		dm_global.MODERATOR),
-
-	'silence': (silence,
-		"%ssilence%s - Silences a given user. Usage: 'silence <username>'%s",
-		dm_global.MODERATOR),
-
-	'unsilence': (unsilence,
-		"%ssilence%s - Unsilences a given user. Usage: 'unsilence <username>'%s",
-		dm_global.MODERATOR),
-
-	'open': (open,
-		"%sopen%s - Opens a channel with a title. Usage: 'open <title>'%s",
-		dm_global.ADMIN),
-
-	'shutdown': (shutdown,
-		"%sshutdown%s - Shuts down the server%s",
-		dm_global.ADMIN)
-
-}
 
 #
 # GLOBAL COMMANDS - commands that have to do with server-wide actions or admin level stuff
@@ -208,7 +162,53 @@ def hf_submit(self, fulltext):
 	user.message_function = user.standardseq_command;
 	HELPFILES[user.helpfile_title] = fulltext
 	user.helpfile_title = None
+# Global commands dictionary
 
+GLOBAL_COMMANDS = {
+	'welcome_edit': (welcome_edit,
+		"%swelcome_edit%s - Changes the welcome banner which displays on connect%s",
+		dm_global.ADMIN),
+	'login_edit': (login_edit,
+		"%slogin_edit%s - Changes the login banner which displays on login%s",
+		dm_global.ADMIN),
+
+	'newuser_edit': (newuser_edit,
+		"%snewuser_edit%s - Changes the banner which displays on creation of a new account%s",
+		dm_global.ADMIN),
+
+	'broadcast': (broadcast,
+		"%sbroadcast%s - Broadcasts a message%s",
+		dm_global.ADMIN),
+
+	'ch_perm': (change_permissions,
+		"%sch_perm%s - Changes the permissions for a particular user. Format: 'ch_perm <user> <+/-> permission>'%s",
+		dm_global.ADMIN),
+
+	'get_perm': (get_permissions,
+		"%sget_perm%s - Displays a list of possible permissions%s",
+		dm_global.ADMIN),
+
+	'write_helpfile': (write_helpfile,
+		"%swrite_helpfile%s - Writes a new helpfile for users to read!%s",
+		dm_global.MODERATOR),
+
+	'silence': (silence,
+		"%ssilence%s - Silences a given user. Usage: 'silence <username>'%s",
+		dm_global.MODERATOR),
+
+	'unsilence': (unsilence,
+		"%ssilence%s - Unsilences a given user. Usage: 'unsilence <username>'%s",
+		dm_global.MODERATOR),
+
+	'open': (open,
+		"%sopen%s - Opens a channel with a title. Usage: 'open <title>'%s",
+		dm_global.ADMIN),
+
+	'shutdown': (shutdown,
+		"%sshutdown%s - Shuts down the server%s",
+		dm_global.ADMIN)
+
+}
 #
 # User Commands!
 #
