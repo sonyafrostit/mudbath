@@ -357,7 +357,7 @@ def join(user, args):
 
 # User Commands!
 
-user.USER_COMMANDS = {
+USER_COMMANDS = {
 
 	'bye': (bye,
 		"%sbye%s - Logs out and exits the server%s",
@@ -372,7 +372,7 @@ user.USER_COMMANDS = {
 		USER),
 
 	'perms': (perms,
-		"%sperms%s - Shows you what your permissionsare%s",
+		"%sperms%s - Shows you what your permissions are%s",
 		USER),
 
 	'join': (join,
