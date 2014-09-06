@@ -90,10 +90,10 @@ dm_comm.load_channels()
 # Load channels
 
 class ExitSignal(Exception):
-	def __init__(self, value):
-		self.value = value
-	def __str__(self):
-		return repr(self.value)
+	def __init__(user, value):
+		user.value = value
+	def __str__(user):
+		return repr(user.value)
 
 # COMMANDS SECTION!
 #
@@ -232,7 +232,7 @@ def shutdown(user, args):
 # 2. Get the text of the file using a MultilineInput
 # 3. Submit it to the database when the user puts in "end"
 #
-def hf_title(self, message):
+def hf_title(user, message):
 	"""
 	Adds a helpfile that users can access by entering the 'help' command followed by the filename.
 	Step 1 (and the setup for 2) of the Helpfile sequence
@@ -247,7 +247,7 @@ def hf_title(self, message):
 	helpfile_body = MultilineInput(user.hf_submit, user.activate_standardseq)
 	user.message_function = helpfile_body.input
 	user.client.send("Text:\n(Type 'end' to finish or 'cancel' to cancel)\n")
-def hf_submit(self, fulltext):
+def hf_submit(user, fulltext):
 	"""
 	Finalizes the helpfile and submits it to the database.
 	Step 3 of the helpfile sequence
@@ -303,8 +303,86 @@ GLOBAL_COMMANDS = {
 		ADMIN)
 
 }
+
+def help(user, args):
+	"""
+	Displays the help string for each command
+	"""
+	if args == "":
+		helpstring = "List of Commands: \n\n"
+		for command in .COMMANDS:
+			if user.has_permission(.COMMANDS[command][2]):
+				helpstring += .COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
+		helpstring += "\n\nList of help files. To read, type in the 'help' command, followed by the name of the file.\nExample: 'help About' reads the 'About' file.:\n\n%s" % (dm_ansi.YELLOW)
+		for hfile in .HELPFILES:
+			helpstring += hfile
+		helpstring += "\n"
+		return helpstring
+	elif args in .HELPFILES:
+		return .HELPFILES[args]
+	elif args in .COMMANDS:
+		return .COMMANDS[args][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
+	else:
+		return "Helpfile '%s' not found. Try help on its own to see a list of helpfiles and commands" % (args)
+def bye(user, args):
+	"""
+	Deactivates the client for pickup by the main server loop
+	"""
+	user.client.deactivate()
+def passwd(user, args):
+	"""
+	Changes the user password. Starts the "Change Password" Sequence
+	"""
+	user.activate_chpass()
+def perms(user, args):
+	"""
+	Displays a list of permissions that the user has
+	"""
+	if user.a_permissions == .ROOT:
+		user.client.send("Root")
+	else:
+		for key in .PERMS_DICT:
+			if user.has_permission(.PERMS_DICT[key]):
+				user.client.send(key + "\n")
+def join(user, args):
+	"""
+	Joins a channel
+	"""
+	if args in dm_comm.CHANNELS:
+		if not dm_comm.CHANNELS[args].private:
+			return dm_comm.CHANNELS[args].plug(user)
+	else:
+		return "Channel does not exist!"
+
+
+# User Commands!
+
+user.USER_COMMANDS = {
+
+	'bye': (bye,
+		"%sbye%s - Logs out and exits the server%s",
+		USER),
+
+	'help': (help,
+		"%shelp%s - Shows helpful information!%s",
+		USER),
+
+	'passwd': (passwd,
+		"%spasswd%s - Changes password%s",
+		USER),
+
+	'perms': (perms,
+		"%sperms%s - Shows you what your permissionsare%s",
+		USER),
+
+	'join': (join,
+		"%sjoin%s - Joins a channel%s",
+		CHANNEL)
+
+}
+
 COMMANDS.update(GLOBAL_COMMANDS)
-	
+COMMANDS.update(USER_COMMANDS)
 	
 	
 #

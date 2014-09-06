@@ -26,29 +26,7 @@ class User:
 		self.logged_in = False 
 		# functions to handle user input
 		# User Commands. Moderator commands, account commands, and one-to-one messaging commands.
-		self.USER_COMMANDS = {
-
-			'bye': (self.bye,
-				"%sbye%s - Logs out and exits the server%s",
-				dm_global.USER),
-
-			'help': (self.help,
-				"%shelp%s - Shows helpful information!%s",
-				dm_global.USER),
-
-			'passwd': (self.passwd,
-				"%spasswd%s - Changes password%s",
-				dm_global.USER),
-
-			'perms': (self.perms,
-				"%sperms%s - Shows you what your permissions are%s",
-				dm_global.USER),
-
-			'join': (self.join,
-				"%sjoin%s - Joins a channel%s",
-				dm_global.CHANNEL)
-
-		}
+		
 		
 
 	# LOGIN SEQUENCE
@@ -298,56 +276,8 @@ class User:
 	# These are for use by everyone. They're even left on for people who are banned,
 	# although the 'silenced' flag may disable some of them.
 	#
-	def help(self, args):
-		"""
-		Displays the help string for each command
-		"""
-		if args == "":
-			helpstring = "List of Commands: \n\n"
-			for command in dm_global.COMMANDS:
-				if self.has_permission(dm_global.COMMANDS[command][2]):
-					helpstring += dm_global.COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
-			helpstring += "\n\nList of help files. To read, type in the 'help' command, followed by the name of the file.\nExample: 'help About' reads the 'About' file.:\n\n%s" % (dm_ansi.YELLOW)
-			for hfile in dm_global.HELPFILES:
-				helpstring += hfile
-			helpstring += "\n"
-			return helpstring
-		elif args in dm_global.HELPFILES:
-			return dm_global.HELPFILES[args]
-		elif args in dm_global.COMMANDS:
-			return dm_global.COMMANDS[args][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
-		else:
-			return "Helpfile '%s' not found. Try help on its own to see a list of helpfiles and commands" % (args)
-	def bye(self, args):
-		"""
-		Deactivates the client for pickup by the main server loop
-		"""
-		self.client.deactivate()
-	def passwd(self, args):
-		"""
-		Changes the user password. Starts the "Change Password" Sequence
-		"""
-		self.activate_chpass()
-	def perms(self, args):
-		"""
-		Displays a list of permissions that the user has
-		"""
-		if self.a_permissions == dm_global.ROOT:
-			self.client.send("Root")
-		else:
-			for key in dm_global.PERMS_DICT:
-				if self.has_permission(dm_global.PERMS_DICT[key]):
-					self.client.send(key + "\n")
-	def join(self, args):
-		"""
-		Joins a channel
-		"""
-		if args in dm_comm.CHANNELS:
-			if not dm_comm.CHANNELS[args].private:
-				return dm_comm.CHANNELS[args].plug(self)
-		else:
-			return "Channel does not exist!"
-
+	
+	
 	#
 	# Other misc methods
 	#
