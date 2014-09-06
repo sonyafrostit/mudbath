@@ -338,7 +338,7 @@ def perms(user, args):
 	"""
 	Displays a list of permissions that the user has
 	"""
-	if user.a_permissions == .ROOT:
+	if user.a_permissions == ROOT:
 		user.client.send("Root")
 	else:
 		for key in .PERMS_DICT:
