@@ -310,18 +310,18 @@ def help(user, args):
 	"""
 	if args == "":
 		helpstring = "List of Commands: \n\n"
-		for command in .COMMANDS:
-			if user.has_permission(.COMMANDS[command][2]):
-				helpstring += .COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
+		for command in COMMANDS:
+			if user.has_permission(COMMANDS[command][2]):
+				helpstring += COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
 		helpstring += "\n\nList of help files. To read, type in the 'help' command, followed by the name of the file.\nExample: 'help About' reads the 'About' file.:\n\n%s" % (dm_ansi.YELLOW)
-		for hfile in .HELPFILES:
+		for hfile in HELPFILES:
 			helpstring += hfile
 		helpstring += "\n"
 		return helpstring
-	elif args in .HELPFILES:
-		return .HELPFILES[args]
-	elif args in .COMMANDS:
-		return .COMMANDS[args][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
+	elif args in HELPFILES:
+		return HELPFILES[args]
+	elif args in COMMANDS:
+		return COMMANDS[args][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
 	else:
 		return "Helpfile '%s' not found. Try help on its own to see a list of helpfiles and commands" % (args)
 def bye(user, args):
