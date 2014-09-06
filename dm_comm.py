@@ -1,6 +1,5 @@
 import dm_global, dm_ansi, datetime
 
-MAILBOXES = {}
 CHANNELS = {}
 
 
@@ -128,19 +127,3 @@ class Channel:
 			return self.msg(message, user)
 		else:
 			return "You're not connected to that channel!"
-#
-# Mailbox class to handle pm's
-#
-class Mailbox:
-	def __init__(self, handle, users=[], blocked=[]):
-		self.handle = handle
-		self.users = users
-		self.blocked = blocked
-		MAILBOXES[handle] = self
-	def recieve_message(self, message, originbox):
-		dm_global.db_conn.log_message(originbox.handle, self.handle, message)
-		for user in self.users:
-			if user.a_account_name == self.handle:
-				user.client.send("%s[%s] %s@%s:%s %s" % (dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox.handle, dm_ansi.CLEAR, message + "\n"))
-			else:
-				user.client.send("%s(@%s) %s[%s] %s@%s:%s %s" % (dm_ansi.MAGENTA, self.handle, dm_ansi.BOLD + dm_ansi.WHITE, datetime.datetime.now().strftime("%X"), dm_ansi.YELLOW, originbox.handle, dm_ansi.CLEAR, message + "\n"))
