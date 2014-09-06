@@ -341,7 +341,7 @@ def perms(user, args):
 	if user.a_permissions == ROOT:
 		user.client.send("Root")
 	else:
-		for key in .PERMS_DICT:
+		for key in PERMS_DICT:
 			if user.has_permission(.PERMS_DICT[key]):
 				user.client.send(key + "\n")
 def join(user, args):
