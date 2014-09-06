@@ -20,6 +20,8 @@ WELCOME_MESSAGE = db_conn.execute_query("SELECT welcome FROM serverdata;")[0][0]
 LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")[0][0]
 
 NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0]
+# Helpfiles
+HELPFILES = db_conn.get_helpfiles()
 
 # Commends dictionary
 COMMANDS = {}

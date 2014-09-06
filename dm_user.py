@@ -1,10 +1,10 @@
 import hashlib, datetime, dm_global, dm_ansi, dm_comm
 
 #
-# HELPFILES - A way to create some helpfiles for the benefit of users! Hopefully they'll read 'em....hopefully
+# dm_global.HELPFILES - A way to create some helpfiles for the benefit of users! Hopefully they'll read 'em....hopefully
 #
 
-HELPFILES = dm_global.db_conn.get_helpfiles()
+
 
 #
 # User Class - Used to connect server to user
@@ -305,20 +305,17 @@ class User:
 		if args == "":
 			helpstring = "List of Commands: \n\n"
 			for command in dm_global.COMMANDS:
-				if self.has_permission(self.GLOBAL_COMMANDS[command][2]):
-					helpstring += self.GLOBAL_COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
-			for command in self.USER_COMMANDS:
-				if self.has_permission(self.USER_COMMANDS[command][2]):
-					helpstring += self.USER_COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
+				if self.has_permission(dm_global.COMMANDS[command][2]):
+					helpstring += dm_global.COMMANDS[command][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
 			helpstring += "\n\nList of help files. To read, type in the 'help' command, followed by the name of the file.\nExample: 'help About' reads the 'About' file.:\n\n%s" % (dm_ansi.YELLOW)
-			for hfile in HELPFILES:
+			for hfile in dm_global.HELPFILES:
 				helpstring += hfile
 			helpstring += "\n"
 			return helpstring
-		elif args in HELPFILES:
-			return HELPFILES[args]
-		elif args in self.GLOBAL_COMMANDS:
-			return self.GLOBAL_COMMANDS[args][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
+		elif args in dm_global.HELPFILES:
+			return dm_global.HELPFILES[args]
+		elif args in dm_global.COMMANDS:
+			return dm_global.COMMANDS[args][1] % (dm_ansi.CYAN, dm_ansi.GREEN, dm_ansi.CLEAR + "\n")
 		else:
 			return "Helpfile '%s' not found. Try help on its own to see a list of helpfiles and commands" % (args)
 	def bye(self, args):
