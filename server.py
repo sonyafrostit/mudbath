@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import dm_global, dm_core, traceback
+import dm_global, dm_user, traceback
 from miniboa import TelnetServer
 
 SERVER_RUN = True
