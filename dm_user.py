@@ -208,13 +208,10 @@ class User:
 			command = message
 			args = ""
 		if command in dm_global.COMMANDS and self.has_permission(dm_global.COMMANDS[command][2]):
-			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
+			self.client.send(dm_global.COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
 		elif command in dm_comm.CHANNELS:
 			self.client.send(dm_comm.CHANNELS[command].handle_input(args, self))
-		elif command in self.USER_COMMANDS and self.has_permission(self.USER_COMMANDS[command][2]):
-			self.client.send(self.USER_COMMANDS[command][0](args))
-			self.client.send(dm_ansi.CLEAR)
 		else:
 			self.client.send("Command/Channel either does not exist or you do not have permission to do that. Try 'help' if you're lost!\n")
 			# We don't show if you don't have permissions or if its a typo. We just remove all access.
