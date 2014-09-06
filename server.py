@@ -12,7 +12,7 @@ def on_connect(client):
     """
     print "++ Opened connection to %s" % client.addrport()
     
-    dm_global.USER_LIST.append(dm_core.User(client))
+    dm_global.USER_LIST.append(dm_user.User(client))
     
 
 
