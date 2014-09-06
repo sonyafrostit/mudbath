@@ -303,11 +303,7 @@ GLOBAL_COMMANDS = {
 		ADMIN)
 
 }
-#
-# User Commands!
-#
-
-
+COMMANDS.update(GLOBAL_COMMANDS)
 	
 	
 	
