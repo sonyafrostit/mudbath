@@ -208,7 +208,7 @@ class User:
 			command = message
 			args = ""
 		if command in dm_global.COMMANDS and self.has_permission(dm_global.COMMANDS[command][2]):
-			self.client.send(dm_global.COMMANDS[command][0](args))
+			self.client.send(dm_global.COMMANDS[command][0](self, args))
 			self.client.send(dm_ansi.CLEAR)
 		elif command in dm_comm.CHANNELS:
 			self.client.send(dm_comm.CHANNELS[command].handle_input(args, self))
