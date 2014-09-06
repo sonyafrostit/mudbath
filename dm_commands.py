@@ -208,6 +208,15 @@ def hf_submit(self, fulltext):
 	user.message_function = user.standardseq_command;
 	HELPFILES[user.helpfile_title] = fulltext
 	user.helpfile_title = None
+
+#
+# User Commands!
+#
+
+
+	
+	
+	
 #
 # MultilineInput - A unique class to add multiline input over telnet.
 #

@@ -229,7 +229,7 @@ class User:
 		else:
 			command = message
 			args = ""
-		if command in self.GLOBAL_COMMANDS and self.has_permission(self.GLOBAL_COMMANDS[command][2]):
+		if command in dm_global.COMMANDS and self.has_permission(dm_global.COMMANDS[command][2]):
 			self.client.send(self.GLOBAL_COMMANDS[command][0](args))
 			self.client.send(dm_ansi.CLEAR)
 		elif command in dm_comm.CHANNELS:

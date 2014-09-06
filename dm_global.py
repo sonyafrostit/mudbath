@@ -21,6 +21,22 @@ LOGIN_MESSAGE = db_conn.execute_query("SELECT login FROM serverdata;")[0][0]
 
 NEW_USER_MESSAGE = db_conn.execute_query("SELECT newuser FROM serverdata;")[0][0]
 
+# Commends dictionary
+COMMANDS = {}
+#Reserved Words: Words you cannot use for channel names!
+
+RESERVED_WORDS = []
+def reserve_word(word):
+	if word not in RESERVED_WORDS:
+		RESERVED_WORDS.add(word)
+
+def unreserve_word(word):
+	if word in RESERVED_WORDS:
+		RESERVED_WORDS.remove(word)
+
+def is_reserved(word):
+	return word in RESERVED_WORDS
+
 #
 # Function to clean up data when user goes offline
 #
@@ -33,6 +49,7 @@ def cleanup(user_addrport):
 			for channel in dm_comm.CHANNELS:
 				dm_comm.CHANNELS[channel].unplug_user(user)
 			return
+			
 # Permission Groups
 #
 # How it works: Addition and subtraction. If you want to add a person to a group, add the group to their a_permissions. As in, a_permissions += group. Subtract for taking away permissions.
