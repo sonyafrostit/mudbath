@@ -1,4 +1,4 @@
-import dm_db, dm_comm, dm_ansi
+import dm_db, dm_comm, dm_ansi, dm_permissions
 # Database Connection
 db_conn = dm_db.DatabaseConnection(username='mudbath', password='St1ll@l1v3!', database='mudbath')
 
@@ -54,38 +54,7 @@ def cleanup(user_addrport):
 				dm_comm.CHANNELS[channel].unplug_user(user)
 			return
 			
-# Permission Groups
-#
-# How it works: Addition and subtraction. If you want to add a person to a group, add the group to their a_permissions. As in, a_permissions += group. Subtract for taking away permissions.
-# 
-# To check for permissions, use modulus. (I.E, if someone is ROOT, then a_permissions % 2 > 0, if ADMIN, then a_permissions % 4 > 1, if MODERATOR then a_permissions % 8 > 3 ) For an implementation, look at User.has_permission()
-#
 
-# ROOT: All commands, trump card. DONT USE THIS PERMISSION!
-ROOT = 1
-# ADMIN: Commands that have to do with the server
-ADMIN = 2 
-# MODERATOR: Commands that have to do with ability to moderate the game and issue bans/lower-level permissions. Chat channels
-MODERATOR = 4
-
-USER = 8
-
-CHANNEL = 16
-
-# For use when parsing commands only. Use the previous groups to add permissons
-PERMS_DICT = {
-
-	"Admin" : ADMIN,
-
-	"Mod" : MODERATOR,
-
-	"User" : USER, # Avoid removing this permission! It prevents you from even logging out!
-
-	"Chan" : CHANNEL,
-
-}
-
-DEFAULT_PERMISSIONS = USER + CHANNEL
 dm_comm.load_channels()
 # Load channels
 
@@ -261,46 +230,46 @@ def hf_submit(user, fulltext):
 GLOBAL_COMMANDS = {
 	'welcome_edit': (welcome_edit,
 		"%swelcome_edit%s - Changes the welcome banner which displays on connect%s",
-		ADMIN),
+		dm_permissions.ADMIN),
 	'login_edit': (login_edit,
 		"%slogin_edit%s - Changes the login banner which displays on login%s",
-		ADMIN),
+		dm_permissions.ADMIN),
 
 	'newuser_edit': (newuser_edit,
 		"%snewuser_edit%s - Changes the banner which displays on creation of a new account%s",
-		ADMIN),
+		dm_permissions.ADMIN),
 
 	'broadcast': (broadcast,
 		"%sbroadcast%s - Broadcasts a message%s",
-		ADMIN),
+		dm_permissions.ADMIN),
 
 	'ch_perm': (change_permissions,
 		"%sch_perm%s - Changes the permissions for a particular user. Format: 'ch_perm <user> <+/-> permission>'%s",
-		ADMIN),
+		dm_permissions.ADMIN),
 
 	'get_perm': (get_permissions,
 		"%sget_perm%s - Displays a list of possible permissions%s",
-		ADMIN),
+		dm_permissions.ADMIN),
 
 	'write_helpfile': (write_helpfile,
 		"%swrite_helpfile%s - Writes a new helpfile for users to read!%s",
-		MODERATOR),
+		dm_permissions.MODERATOR),
 
 	'silence': (silence,
 		"%ssilence%s - Silences a given user. Usage: 'silence <username>'%s",
-		MODERATOR),
+		dm_permissions.MODERATOR),
 
 	'unsilence': (unsilence,
 		"%ssilence%s - Unsilences a given user. Usage: 'unsilence <username>'%s",
-		MODERATOR),
+		dm_permissions.MODERATOR),
 
 	'open': (open,
 		"%sopen%s - Opens a channel with a title. Usage: 'open <title>'%s",
-		ADMIN),
+		dm_permissions.ADMIN),
 
 	'shutdown': (shutdown,
 		"%sshutdown%s - Shuts down the server%s",
-		ADMIN)
+		dm_permissions.ADMIN)
 
 }
 
@@ -361,29 +330,29 @@ USER_COMMANDS = {
 
 	'bye': (bye,
 		"%sbye%s - Logs out and exits the server%s",
-		USER),
+		dm_permissions.USER),
 
 	'help': (help,
 		"%shelp%s - Shows helpful information!%s",
-		USER),
+		dm_permissions.USER),
 
 	'passwd': (passwd,
 		"%spasswd%s - Changes password%s",
-		USER),
+		dm_permissions.USER),
 
 	'perms': (perms,
 		"%sperms%s - Shows you what your permissions are%s",
-		USER),
+		dm_permissions.USER),
 
 	'join': (join,
 		"%sjoin%s - Joins a channel%s",
-		CHANNEL)
+		dm_permissions.CHANNEL)
 
 }
 
 COMMANDS.update(GLOBAL_COMMANDS)
 COMMANDS.update(USER_COMMANDS)
-	
+
 	
 #
 # MultilineInput - A unique class to add multiline input over telnet.

@@ -1,4 +1,4 @@
-import hashlib, datetime, dm_global, dm_ansi, dm_comm
+import hashlib, datetime, dm_global, dm_ansi, dm_permissions
 
 #
 # dm_global.HELPFILES - A way to create some helpfiles for the benefit of users! Hopefully they'll read 'em....hopefully
@@ -210,8 +210,8 @@ class User:
 		if command in dm_global.COMMANDS and self.has_permission(dm_global.COMMANDS[command][2]):
 			self.client.send(dm_global.COMMANDS[command][0](self, args))
 			self.client.send(dm_ansi.CLEAR)
-		elif command in dm_comm.CHANNELS:
-			self.client.send(dm_comm.CHANNELS[command].handle_input(args, self))
+		elif command in dm_global.dm_comm.CHANNELS:
+			self.client.send(dm_global.dm_comm.CHANNELS[command].handle_input(args, self))
 		else:
 			self.client.send("Command/Channel either does not exist or you do not have permission to do that. Try 'help' if you're lost!\n")
 			# We don't show if you don't have permissions or if its a typo. We just remove all access.
@@ -297,13 +297,7 @@ class User:
 		self.logged_in = False # To prevent function calls when data has not yet been populated as necessary for preconditions
 		# Login Sequence
 		self.message_function = self.login_uname
-	def has_permission(self, perm_group):
-		"""
-		Checks to see if user is has perm_group permissions
-		"""
-		return self.a_permissions == dm_global.ROOT or self.a_permissions % (perm_group * 2) > perm_group - 1 # Oh yeah, it's that easy.
-	#
-	#
+	
 	def __eq__(self, other):
         	return (isinstance(other, self.__class__)
             	and self.client == other.client) # Users are the same if their clients are the same.
